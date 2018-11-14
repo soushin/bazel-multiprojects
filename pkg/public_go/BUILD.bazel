@@ -2,10 +2,18 @@ load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["main.go"],
+    srcs = [
+        "injector.go",
+        "main.go",
+        "wire_gen.go",
+    ],
     importpath = "github.com/soushin/bazel-multiprojects/pkg/public_go",
     visibility = ["//visibility:private"],
-    deps = ["//pkg/common_go/util:go_default_library"],
+    deps = [
+        "//pkg/common_go/util:go_default_library",
+        "//pkg/public_go/usecase:go_default_library",
+        "@com_github_google_cloud//wire:go_default_library",
+    ],
 )
 
 go_binary(

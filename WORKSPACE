@@ -15,8 +15,16 @@ http_archive(
 load("@io_bazel_rules_go//go:def.bzl", "go_rules_dependencies", "go_register_toolchains")
 go_rules_dependencies()
 go_register_toolchains()
-load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
+load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies", "go_repository")
 gazelle_dependencies()
+
+## Go dependencies
+
+go_repository(
+    name = "com_github_google_cloud",
+    commit = "2152f209f3c907645f7ebdcacdb2c18cd89e6fa8",
+    importpath = "github.com/google/go-cloud",
+)
 
 # Kotlin
 
