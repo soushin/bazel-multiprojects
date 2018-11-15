@@ -10,7 +10,7 @@ kt_jvm_library(
 
 java_binary(
     name = "java_bin",
-    main_class = "com.github.soushin.multirpojects.publickt.MainKt",
+    main_class = "com.github.soushin.multrpojects.publickt.MainKt",
     runtime_deps = [":public_kt_lib"],
 )
 

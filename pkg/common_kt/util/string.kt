@@ -1,4 +1,4 @@
-package com.github.soushin.multirpojects.commonkt.util
+package com.github.soushin.multipojects.commonkt.util
 
 fun String.add() = "${this} - built by Bazel!"
 
