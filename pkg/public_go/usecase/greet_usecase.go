@@ -7,11 +7,11 @@ import (
 var GreetUsecaseSet = wire.NewSet(ProvideUseCase)
 
 type GreetUsecase struct {
-	Greet string
+	Msg string
 }
 
-func ProvideUseCase(greet string) GreetUsecase {
+func ProvideUseCase(msg string) GreetUsecase {
 	return GreetUsecase{
-		Greet: greet,
+		Msg: msg,
 	}
 }
