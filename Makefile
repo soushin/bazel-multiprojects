@@ -8,7 +8,7 @@ dep:
 	go get github.com/google/go-cloud/wire/cmd/wire
 
 .PHONY: dep-go
-go-dep:
+dep-go:
 	cd pkg/public_go && wire
 
 # build
@@ -18,8 +18,15 @@ gazelle:
 	bazel run gazelle
 
 .PHONY: compile
-compile: dep-go gazelle
+compile: dep-go gazelle gen-proto
 	bazel build //pkg/public_go:public_go
+
+# proto
+
+.PHONY: gen-proto
+gen-proto:
+	bazel build //proto/echo:proto_buf && mv -f bazel-genfiles/proto/echo/proto_buf/proto/echo/echo.pb.go proto/echo
+	bazel build //proto/greet:proto_buf && mv -f bazel-genfiles/proto/greet/proto_buf/proto/greet/greet.pb.go proto/greet
 
 # test
 

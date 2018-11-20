@@ -11,6 +11,10 @@ go_library(
     deps = [
         "//pkg/common_go/util:go_default_library",
         "//pkg/public_go/usecase:go_default_library",
+        "//proto/echo:go_default_library",
+        "//proto/greet:go_default_library",
+        "@org_golang_google_grpc//:go_default_library",
+        "@org_golang_google_grpc//reflection:go_default_library",
     ],
 )
 

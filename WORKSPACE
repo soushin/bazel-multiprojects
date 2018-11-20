@@ -1,7 +1,11 @@
-
-# Go
-
+workspace(name = "com_github_soushin_bazelmultiprojects")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+
+# ================================================================
+# Go support requires rules_go, bazel_gazelle
+# ================================================================
+
 http_archive(
     name = "io_bazel_rules_go",
     url = "https://github.com/bazelbuild/rules_go/releases/download/0.16.2/rules_go-0.16.2.tar.gz",
@@ -15,10 +19,14 @@ http_archive(
 load("@io_bazel_rules_go//go:def.bzl", "go_rules_dependencies", "go_register_toolchains")
 go_rules_dependencies()
 go_register_toolchains()
-load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies", "go_repository")
+load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
 gazelle_dependencies()
 
-## Go dependencies
+# ================================================================
+# Go projects dependencies
+# ================================================================
+
+load("@bazel_gazelle//:deps.bzl", "go_repository")
 
 go_repository(
     name = "com_github_google_cloud",
@@ -26,9 +34,16 @@ go_repository(
     importpath = "github.com/google/go-cloud",
 )
 
-# Kotlin
+go_repository(
+    name = "org_golang_google_grpc",
+    importpath = "github.com/grpc/grpc-go",
+    tag = "v1.16.0",
+)
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+# ================================================================
+# Kotlin support requires rules_kotlin
+# ================================================================
+
 rules_kotlin_version = "87bd13f91d166a8070e9bbfbb0861f6f76435e7a"
 http_archive(
     name = "io_bazel_rules_kotlin",
@@ -40,9 +55,10 @@ load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kotlin_repositories", "kt_reg
 kotlin_repositories()
 kt_register_toolchains()
 
-# Docker
+# ================================================================
+# Docker support requires rules_docker
+# ================================================================
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 http_archive(
     name = "io_bazel_rules_docker",
     sha256 = "29d109605e0d6f9c892584f07275b8c9260803bf0c6fcb7de2623b2bedc910bd",
@@ -64,3 +80,14 @@ load(
     _go_image_repos = "repositories",
 )
 _go_image_repos()
+
+# ================================================================
+# Protobuf support requires rules_proto
+# ================================================================
+
+http_archive(
+	name = "build_stack_rules_proto",
+	urls = ["https://github.com/stackb/rules_proto/archive/1d6550fc2e62.tar.gz"],
+	sha256 = "113e6792f5b20679285c86d91c163cc8c4d2b4d24d7a087ae4f233b5d9311012",
+	strip_prefix = "rules_proto-1d6550fc2e625d47dc4faadac92d7cb20e3ba5c5",
+)
