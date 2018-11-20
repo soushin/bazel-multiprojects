@@ -35,4 +35,12 @@ test-go: dep-go gazelle
 	bazel run //pkg/common_go/util:go_default_test
 	bazel run //pkg/public_go:go_default_test
 
+# container
 
+.PHONY: container-build
+container-build:
+	bazel run --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //pkg/public_go:public_go_image
+
+.PHONY: container-push
+container-push:
+	bazel run //pkg/public_go:push_public_go_image
