@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package echo;
+
+service Echo {
+    rpc Echo (EchoInbound) returns (EchoOutbound);
+}
+
+message EchoInbound {
+    string message = 1;
+}
+
+message EchoOutbound {
+    string message = 1;
+}
