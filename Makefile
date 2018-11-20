@@ -25,8 +25,8 @@ compile: dep-go gazelle gen-proto
 
 .PHONY: gen-proto
 gen-proto:
-	bazel build //proto/echo:proto_buf && mv -f bazel-genfiles/proto/echo/proto_buf/proto/echo/echo.pb.go proto/echo
-	bazel build //proto/greet:proto_buf && mv -f bazel-genfiles/proto/greet/proto_buf/proto/greet/greet.pb.go proto/greet
+	$(eval protos = $(shell find ./proto -type d -d 1 | sed 's/\.\/proto\///g' | xargs))
+	@for p in $(protos); do bazel build //proto/$$p:proto_buf && mv -f bazel-genfiles/proto/$$p/proto_buf/proto/$$p/$$p.pb.go proto/$$p; done
 
 # test
 
@@ -34,3 +34,5 @@ gen-proto:
 test-go: dep-go gazelle
 	bazel run //pkg/common_go/util:go_default_test
 	bazel run //pkg/public_go:go_default_test
+
+
