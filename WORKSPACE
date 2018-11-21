@@ -75,6 +75,13 @@ container_pull(
     tag = "12-ea-18-jdk-alpine3.8",
 )
 
+container_pull(
+    name = "distroless_base_image",
+    registry = "gcr.io",
+    repository = "distroless/base",
+    digest = "sha256:628939ac8bf3f49571d05c6c76b8688cb4a851af6c7088e599388259875bde20"
+)
+
 load(
     "@io_bazel_rules_docker//go:image.bzl",
     _go_image_repos = "repositories",

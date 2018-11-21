@@ -32,20 +32,24 @@ go_test(
 
 # --
 
-load("@io_bazel_rules_docker//go:image.bzl", "go_image")
-
-go_image(
-    name = "public_go_base_image",
-    embed = [":go_default_library"],
-    importpath = "github.com/soushin/bazel-multiprojects/pkg/public_go",
-    goarch = "amd64",
-    goos = "linux",
-    pure = "on",
-)
-
-load("@io_bazel_rules_docker//container:container.bzl", "container_image")
+load("@io_bazel_rules_docker//container:container.bzl", "container_image", "container_push")
 
 container_image(
     name = "public_go_image",
-    base = ":public_go_base_image",
+    base = "@distroless_base_image//image",
+    files = [":public_go"],
+    cmd = [
+        "/public_go",
+        "-greet",
+        "Awesome",
+    ],
+)
+
+container_push(
+    name = "push_public_go_image",
+    image = ":public_go_image",
+    format = "Docker",
+    registry = "index.docker.io",
+    repository = "soushin/bazel-multiprojects-go",
+    tag = "latest",
 )
