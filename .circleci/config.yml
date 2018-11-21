@@ -1,9 +1,72 @@
 version: 2
 jobs:
+  preparetool:
+    docker:
+    - image: circleci/golang:1.10.3
+    steps:
+    - restore_cache:
+        keys:
+        - v2-build-bazel-cache-{{ .Branch }}--
+        - v2-build-bazel-cache-master--
+        - v2-build-bazel-cache-
+    - run:
+        name: setup
+        command: |
+          if ! type ./bin/bazel >/dev/null 2>&1; then
+            sudo apt-get install pkg-config zip g++ zlib1g-dev unzip python
+            wget -q -O bazel-installer.sh https://github.com/bazelbuild/bazel/releases/download/0.19.2/bazel-0.19.2-installer-linux-x86_64.sh
+            chmod +x ./bazel-installer.sh
+            ./bazel-installer.sh --user
+            mkdir -p ./bin
+            cp /home/circleci/.bazel/bin/* ./bin/
+          fi
+    - run:
+        name: version
+        command: ./bin/bazel version
+    - save_cache:
+        key: v2-build-bazel-cache-{{ .Branch }}--{{ .Revision }}
+        paths:
+        - ./bin
   build:
     docker:
-    - image: circleci/golang:1.9
-    working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
+    - image: circleci/golang:1.10.3
     steps:
     - checkout
-    - run: echo 'test'
+    - restore_cache:
+        keys:
+          - v2-build-bazel-cache-{{ .Branch }}--
+          - v2-build-bazel-cache-master--
+          - v2-build-bazel-cache-
+          - v2-build-bazel-bin-cache-{{ .Branch }}--
+          - v2-build-bazel-bin-cache-master--
+          - v2-build-bazel-bin-cache-
+    - run:
+        name: setup
+        command: |
+          if ! type /usr/bin/patch >/dev/null 2>&1; then
+            sudo apt-get install patch
+          fi
+    - run:
+        name: build
+        command: ./script/circleci.sh $(pwd) build
+    - run:
+        name: container_push
+        command: ./script/circleci.sh $(pwd) push
+    - save_cache:
+        key: v2-build-bazel-bin-cache-{{ .Branch }}--{{ .Revision }}
+        paths:
+        - ./bazel-bazel-multiprojects
+        - ./bazel-bin
+        - ./bazel-genfiles
+        - ./bazel-out
+        - ./bazel-testlogs
+
+
+workflows:
+  version: 2
+  deploy:
+    jobs:
+    - preparetool
+    - build:
+        requires:
+        - preparetool
