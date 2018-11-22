@@ -1,9 +1,9 @@
 package main
 
 import (
-	"testing"
 	"net/http"
 	"net/http/httptest"
+	"testing"
 )
 
 func TestServer(t *testing.T) {
@@ -25,7 +25,7 @@ func TestServer(t *testing.T) {
 			status, http.StatusOK)
 	}
 
-	expected := "Awesome Go! - built by Bazel!"
+	expected := "Awesome Go! - built by Bazel!!"
 	if rr.Body.String() != expected {
 		t.Errorf("handler returned unexpected body: got %v want %v",
 			rr.Body.String(), expected)

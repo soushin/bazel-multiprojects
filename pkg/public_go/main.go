@@ -27,7 +27,7 @@ type server struct{}
 
 func (s *server) Greet(ctx context.Context, in *greet.GreetInbound) (*greet.GreetOutbound, error) {
 	return &greet.GreetOutbound{
-		Message: util.Add(fmt.Sprintf("%s Go!", msg))}, nil
+		Message: util.Add(fmt.Sprintf("%s Go!!", msg))}, nil
 }
 
 func (s *server) Echo(ctx context.Context, in *echo.EchoInbound) (*echo.EchoOutbound, error) {

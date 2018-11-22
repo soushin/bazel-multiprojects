@@ -1,5 +1,5 @@
 package util
 
 func Add(text string) string {
-	return text + " - built by Bazel!"
+	return text + " - built by Bazel!!"
 }

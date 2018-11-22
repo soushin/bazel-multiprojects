@@ -46,10 +46,10 @@ container_image(
 )
 
 container_push(
-    name = "push_public_go_image",
+    name = "container_push",
     image = ":public_go_image",
     format = "Docker",
     registry = "index.docker.io",
     repository = "soushin/bazel-multiprojects-go",
-    tag = "latest",
+    tag = "$(IMAGE_TAG)",
 )
