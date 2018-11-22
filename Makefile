@@ -1,3 +1,5 @@
+PACKAGE = public_go
+
 .PHONY: build
 build: compile
 
@@ -9,7 +11,7 @@ dep:
 
 .PHONY: dep-go
 dep-go:
-	cd pkg/public_go && wire
+	cd pkg/${PACKAGE} && wire
 
 # build
 
@@ -19,7 +21,7 @@ gazelle:
 
 .PHONY: compile
 compile: dep-go gazelle gen-proto
-	bazel build //pkg/public_go:public_go
+	bazel query //... | grep "//pkg/${PACKAGE}" | xargs bazel build --define IMAGE_TAG=test
 
 # proto
 
@@ -32,15 +34,19 @@ gen-proto:
 
 .PHONY: test-go
 test-go: dep-go gazelle
-	bazel run //pkg/common_go/util:go_default_test
-	bazel run //pkg/public_go:go_default_test
+	bazel query //... | grep "//pkg/${PACKAGE}" | xargs bazel test --define IMAGE_TAG=latest
+
+.PHONY: test-go-all
+test-go-all: dep-go gazelle
+	bazel query //... | grep "//pkg" | xargs bazel test --define IMAGE_TAG=latest
 
 # container
 
 .PHONY: container-build
 container-build:
-	bazel run --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //pkg/public_go:public_go_image
+	bazel query //... | grep "//pkg/${PACKAGE}:container_image" | xargs bazel run --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64
 
 .PHONY: container-push
 container-push:
-	bazel run //pkg/public_go:push_public_go_image
+	$(eval image = $(shell git rev-parse --abbrev-ref @ | sed 's/\//_/g'))
+	bazel query //... | grep "//pkg/${PACKAGE}:container_push" | xargs bazel run --define IMAGE_TAG=$(image)
