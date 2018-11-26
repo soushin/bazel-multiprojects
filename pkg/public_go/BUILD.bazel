@@ -35,7 +35,7 @@ go_test(
 load("@io_bazel_rules_docker//container:container.bzl", "container_image", "container_push")
 
 container_image(
-    name = "public_go_image",
+    name = "container_image",
     base = "@distroless_base_image//image",
     files = [":public_go"],
     cmd = [
@@ -47,7 +47,7 @@ container_image(
 
 container_push(
     name = "container_push",
-    image = ":public_go_image",
+    image = ":container_image",
     format = "Docker",
     registry = "index.docker.io",
     repository = "soushin/bazel-multiprojects-go",
