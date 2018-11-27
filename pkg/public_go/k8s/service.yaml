@@ -9,4 +9,9 @@ spec:
   ports:
   - protocol: TCP
     port: 8080
-    targetPort: 8080
+    targetPort: http-public
+    name: http-public
+  - protocol: TCP
+    port: 50051
+    targetPort: grpc-public
+    name: grpc-public
