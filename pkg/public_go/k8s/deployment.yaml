@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: publicgo
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        deployment: publicgo
+    spec:
+      containers:
+      - name: publicgo
+        image: index.docker.io/soushin/bazel-multiprojects-go:soushin_ops
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5

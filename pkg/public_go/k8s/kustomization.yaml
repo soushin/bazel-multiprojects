@@ -1,0 +1,6 @@
+commonLabels:
+  app: publicgo
+
+resources:
+- deployment.yaml
+- service.yaml
