@@ -14,6 +14,9 @@ spec:
         image: index.docker.io/soushin/bazel-multiprojects-go:soushin_ops
         ports:
         - containerPort: 8080
+          name: http-public
+        - containerPort: 50051
+          name: grpc-public
         readinessProbe:
           httpGet:
             path: /
