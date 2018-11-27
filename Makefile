@@ -23,6 +23,10 @@ gazelle:
 compile: dep-go gazelle gen-proto
 	bazel query //... | grep "//pkg/${PACKAGE}" | xargs bazel build --define IMAGE_TAG=test
 
+.PHONY: run
+run: dep-go gazelle gen-proto
+	bazel query //... | grep "//pkg/${PACKAGE}" | xargs bazel run --define IMAGE_TAG=test
+
 # proto
 
 .PHONY: gen-proto
@@ -49,4 +53,4 @@ container-build:
 .PHONY: container-push
 container-push:
 	$(eval image = $(shell git rev-parse --abbrev-ref @ | sed 's/\//_/g'))
-	bazel query //... | grep "//pkg/${PACKAGE}:container_push" | xargs bazel run --define IMAGE_TAG=$(image)
+	bazel query //... | grep "//pkg/${PACKAGE}:container_push" | xargs bazel run --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 --define IMAGE_TAG=$(image)

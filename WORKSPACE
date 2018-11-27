@@ -36,8 +36,15 @@ go_repository(
 
 go_repository(
     name = "org_golang_google_grpc",
-    importpath = "github.com/grpc/grpc-go",
+    importpath = "google.golang.org/grpc",
     tag = "v1.16.0",
+)
+
+go_repository(
+    name = "io_k8s_sigs_kustomize",
+    importpath = "sigs.k8s.io/kustomize",
+#    tag = "v1.0.10",
+    commit = "ef51cceff55b17542fc91d6c4e30ea0bbb9641f7",
 )
 
 # ================================================================

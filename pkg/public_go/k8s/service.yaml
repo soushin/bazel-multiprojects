@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: publicgo
+spec:
+  selector:
+    deployment: publicgo
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
