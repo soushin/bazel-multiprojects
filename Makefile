@@ -3,28 +3,31 @@ PACKAGE = public_go
 .PHONY: build
 build: compile
 
+.PHONY: clean
+clean: bazel clean
+
 # dependencies
 
 .PHONY: dep
 dep:
-	go get github.com/google/go-cloud/wire/cmd/wire
+	go mod download
 
-.PHONY: dep-go
-dep-go:
+.PHONY: dep-wire
+dep-wire:
 	cd pkg/${PACKAGE} && wire
 
 # build
 
 .PHONY: gazelle
 gazelle:
-	bazel run gazelle
+	bazel run gazelle -- update-repos -from_file ./go.mod
 
 .PHONY: compile
-compile: dep-go gazelle gen-proto
+compile: gazelle gen-proto
 	bazel query //... | grep "//pkg/${PACKAGE}" | xargs bazel build --define IMAGE_TAG=test
 
 .PHONY: run
-run: dep-go gazelle gen-proto
+run: gazelle gen-proto
 	bazel query //... | grep "//pkg/${PACKAGE}" | xargs bazel run --define IMAGE_TAG=test
 
 # proto
@@ -37,11 +40,11 @@ gen-proto:
 # test
 
 .PHONY: test-go
-test-go: dep-go gazelle
+test-go: gazelle
 	bazel query //... | grep "//pkg/${PACKAGE}" | xargs bazel test --define IMAGE_TAG=latest
 
 .PHONY: test-go-all
-test-go-all: dep-go gazelle
+test-go-all: gazelle
 	bazel query //... | grep "//pkg" | xargs bazel test --define IMAGE_TAG=latest
 
 # container

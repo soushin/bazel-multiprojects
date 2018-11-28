@@ -5,5 +5,5 @@ go_library(
     srcs = ["greet_usecase.go"],
     importpath = "github.com/soushin/bazel-multiprojects/pkg/public_go/usecase",
     visibility = ["//visibility:public"],
-    deps = ["@com_github_google_cloud//wire:go_default_library"],
+    deps = ["@com_github_google_go_cloud//wire:go_default_library"],
 )

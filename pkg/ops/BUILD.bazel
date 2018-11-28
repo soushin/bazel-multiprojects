@@ -5,12 +5,7 @@ go_library(
     srcs = ["main.go"],
     importpath = "github.com/soushin/bazel-multiprojects/pkg/ops",
     visibility = ["//visibility:private"],
-    deps = [
-        "@io_k8s_sigs_kustomize//k8sdeps:go_default_library",
-        "@io_k8s_sigs_kustomize//pkg/fs:go_default_library",
-        "@io_k8s_sigs_kustomize//pkg/loader:go_default_library",
-        "@io_k8s_sigs_kustomize//pkg/target:go_default_library",
-    ],
+    deps = ["//pkg/ops/cmd:go_default_library"],
 )
 
 go_binary(
