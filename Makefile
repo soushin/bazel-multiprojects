@@ -23,11 +23,11 @@ gazelle:
 	bazel run gazelle -- update-repos -from_file ./go.mod
 
 .PHONY: compile
-compile: gazelle gen-proto
+compile: dep gazelle gen-proto
 	bazel query //... | grep "//pkg/${PACKAGE}" | xargs bazel build --define IMAGE_TAG=test
 
 .PHONY: run
-run: gazelle gen-proto
+run: dep gazelle gen-proto
 	bazel query //... | grep "//pkg/${PACKAGE}" | xargs bazel run --define IMAGE_TAG=test
 
 # proto

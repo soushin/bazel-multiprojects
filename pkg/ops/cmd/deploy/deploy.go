@@ -3,7 +3,10 @@ package deploy
 import (
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
+	"os/exec"
+	"time"
 
 	"github.com/spf13/cobra"
 	"sigs.k8s.io/kustomize/k8sdeps"
@@ -74,20 +77,33 @@ func (o *buildOptions) RunBuild(out io.Writer) error {
 	if err != nil {
 		return err
 	}
+	ioutil.WriteFile("/tmp/resource", res, os.ModePerm)
 
-	out.Write(res)
+	timeout := time.After(5 * time.Minute)
+	pipeCmd := "cat /tmp/resource | kubectl apply -f -"
+	cmd := exec.Command("sh", "-c", pipeCmd)
+	cmd.Stdout = out
 
-	//in := os.Stdin
-	//in.Write(res)
-	//
-	//ioErr := os.Stderr
-	//
-	//ioStreams := genericclioptions.IOStreams{In: in, Out: out, ErrOut: ioErr}
-	//
-	//apply := kubeCmd.NewApplyOptions(ioStreams)
-	//if err := apply.Run(); err != nil {
-	//	return err
-	//}
+	done := make(chan error)
+
+	if err := cmd.Start(); err != nil {
+		return err
+	}
+	go func() {
+		done <- cmd.Wait()
+	}()
+
+	select {
+	case <-timeout:
+		cmd.Process.Kill()
+	case err := <-done:
+		if err != nil {
+			return err
+		}
+		if err := os.Remove("/tmp/resource"); err != nil {
+			return err
+		}
+	}
 
 	return nil
 }
