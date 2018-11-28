@@ -1,5 +1,5 @@
 commonLabels:
-  app: publicgo
+- app: publicgo
 
 resources:
 - deployment.yaml
