@@ -1,7 +1,0 @@
-namePrefix:
-- path: nameprefix/path
-  kind: SomeKind
-
-resources:
-- deployment.yaml
-- service.yaml

@@ -3,20 +3,27 @@ kind: Deployment
 metadata:
   name: publicgo
 spec:
+  selector:
+    matchLabels:
+      app: publicgo
   replicas: 1
   template:
     metadata:
       labels:
+        app: publicgo
         deployment: publicgo
     spec:
       containers:
       - name: publicgo
-        image: index.docker.io/soushin/bazel-multiprojects-go:soushin_ops
+        image: index.docker.io/soushin/bazel-multiprojects-go:latest
         ports:
         - containerPort: 8080
           name: http-public
         - containerPort: 50051
           name: grpc-public
+        env:
+          - name: GO_COLOR
+            value: black
         readinessProbe:
           httpGet:
             path: /

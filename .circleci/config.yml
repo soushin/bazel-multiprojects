@@ -49,9 +49,9 @@ jobs:
     - run:
         name: build
         command: ./script/circleci.sh $(pwd) build
-    - run:
-        name: container_push
-        command: ./script/circleci.sh $(pwd) push
+#    - run:
+#        name: container_push
+#        command: ./script/circleci.sh $(pwd) push
     - save_cache:
         key: v2-build-bazel-bin-cache-{{ .Branch }}--{{ .Revision }}
         paths:
