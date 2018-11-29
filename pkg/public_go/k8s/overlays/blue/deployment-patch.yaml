@@ -1,0 +1,12 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: publicgo
+spec:
+  template:
+    spec:
+      containers:
+      - name: publicgo
+        env:
+        - name: GO_COLOR
+          value: blue

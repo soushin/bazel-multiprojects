@@ -7,6 +7,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -36,7 +37,7 @@ func (s *server) Echo(ctx context.Context, in *echo.EchoInbound) (*echo.EchoOutb
 }
 
 func main() {
-	g := flag.String("greet", "Hello", "greet message")
+	g := flag.String("greet", "Hello!!", "greet message")
 	flag.Parse()
 	greetUsecase, err := initializeGreetUsecase(context.Background(), *g)
 	if err != nil {
@@ -65,6 +66,7 @@ func main() {
 
 	// serve http/1.1 server
 	http.HandleFunc("/", handler)
+	http.HandleFunc("/color", colorHandler)
 	if err := http.ListenAndServe(fmt.Sprintf(":%s", httpPort), nil); err != nil {
 		log.Fatalf("failed to serve http server")
 	}
@@ -72,4 +74,8 @@ func main() {
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, util.Add(fmt.Sprintf("%s Go!", msg)))
+}
+
+func colorHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, os.Getenv("GO_COLOR"))
 }

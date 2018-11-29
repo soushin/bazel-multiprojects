@@ -1,0 +1,8 @@
+bases:
+- ../../base
+
+patchesStrategicMerge:
+- deployment-patch.yaml
+- service-patch.yaml
+
+namePrefix: bule-
