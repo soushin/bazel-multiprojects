@@ -1,4 +1,5 @@
 workspace(name = "com_github_soushin_bazelmultiprojects")
+
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
@@ -11,55 +12,40 @@ http_archive(
     url = "https://github.com/bazelbuild/rules_go/releases/download/0.16.2/rules_go-0.16.2.tar.gz",
     sha256 = "f87fa87475ea107b3c69196f39c82b7bbf58fe27c62a338684c20ca17d1d8613",
 )
+
 http_archive(
     name = "bazel_gazelle",
     urls = ["https://github.com/bazelbuild/bazel-gazelle/releases/download/0.15.0/bazel-gazelle-0.15.0.tar.gz"],
     sha256 = "6e875ab4b6bf64a38c352887760f21203ab054676d9c1b274963907e0768740d",
 )
+
 load("@io_bazel_rules_go//go:def.bzl", "go_rules_dependencies", "go_register_toolchains")
+
 go_rules_dependencies()
+
 go_register_toolchains()
-load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
+
+load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies", "go_repository")
+
 gazelle_dependencies()
-
-# ================================================================
-# Go projects dependencies
-# ================================================================
-
-load("@bazel_gazelle//:deps.bzl", "go_repository")
-
-go_repository(
-    name = "com_github_google_cloud",
-    commit = "2152f209f3c907645f7ebdcacdb2c18cd89e6fa8",
-    importpath = "github.com/google/go-cloud",
-)
-
-go_repository(
-    name = "org_golang_google_grpc",
-    importpath = "google.golang.org/grpc",
-    tag = "v1.16.0",
-)
-
-go_repository(
-    name = "io_k8s_sigs_kustomize",
-    importpath = "sigs.k8s.io/kustomize",
-#    tag = "v1.0.10",
-    commit = "ef51cceff55b17542fc91d6c4e30ea0bbb9641f7",
-)
 
 # ================================================================
 # Kotlin support requires rules_kotlin
 # ================================================================
 
 rules_kotlin_version = "87bd13f91d166a8070e9bbfbb0861f6f76435e7a"
+
 http_archive(
     name = "io_bazel_rules_kotlin",
     urls = ["https://github.com/bazelbuild/rules_kotlin/archive/%s.zip" % rules_kotlin_version],
     type = "zip",
-    strip_prefix = "rules_kotlin-%s" % rules_kotlin_version
+    strip_prefix = "rules_kotlin-%s" % rules_kotlin_version,
 )
+
 load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kotlin_repositories", "kt_register_toolchains")
+
 kotlin_repositories()
+
 kt_register_toolchains()
 
 # ================================================================
@@ -86,13 +72,14 @@ container_pull(
     name = "distroless_base_image",
     registry = "gcr.io",
     repository = "distroless/base",
-    digest = "sha256:628939ac8bf3f49571d05c6c76b8688cb4a851af6c7088e599388259875bde20"
+    digest = "sha256:628939ac8bf3f49571d05c6c76b8688cb4a851af6c7088e599388259875bde20",
 )
 
 load(
     "@io_bazel_rules_docker//go:image.bzl",
     _go_image_repos = "repositories",
 )
+
 _go_image_repos()
 
 # ================================================================
@@ -100,8 +87,54 @@ _go_image_repos()
 # ================================================================
 
 http_archive(
-	name = "build_stack_rules_proto",
-	urls = ["https://github.com/stackb/rules_proto/archive/1d6550fc2e62.tar.gz"],
-	sha256 = "113e6792f5b20679285c86d91c163cc8c4d2b4d24d7a087ae4f233b5d9311012",
-	strip_prefix = "rules_proto-1d6550fc2e625d47dc4faadac92d7cb20e3ba5c5",
+    name = "build_stack_rules_proto",
+    urls = ["https://github.com/stackb/rules_proto/archive/1d6550fc2e62.tar.gz"],
+    sha256 = "113e6792f5b20679285c86d91c163cc8c4d2b4d24d7a087ae4f233b5d9311012",
+    strip_prefix = "rules_proto-1d6550fc2e625d47dc4faadac92d7cb20e3ba5c5",
+)
+
+# ================================================================
+# Go projects dependencies
+# ================================================================
+
+go_repository(
+    name = "com_github_golang_protobuf",
+    commit = "aa810b61a9c79d51363740d207bb46cf8e620ed5",
+    importpath = "github.com/golang/protobuf",
+)
+
+go_repository(
+    name = "org_golang_google_genproto",
+    commit = "31ac5d88444a9e7ad18077db9a165d793ad06a2e",
+    importpath = "google.golang.org/genproto",
+)
+
+go_repository(
+    name = "org_golang_x_net",
+    commit = "adae6a3d119ae4890b46832a2e88a95adc62b8e7",
+    importpath = "golang.org/x/net",
+)
+
+go_repository(
+    name = "org_golang_x_sys",
+    commit = "4ed8d59d0b35e1e29334a206d1b3f38b1e5dfb31",
+    importpath = "golang.org/x/sys",
+)
+
+go_repository(
+    name = "org_golang_x_text",
+    commit = "f21a4dfb5e38f5895301dc265a8def02365cc3d0",
+    importpath = "golang.org/x/text",
+)
+
+go_repository(
+    name = "com_github_google_go_cloud",
+    commit = "1929e0c4fa0bd3defff57736e5f821d9983aad91",
+    importpath = "github.com/google/go-cloud",
+)
+
+go_repository(
+    name = "org_golang_google_grpc",
+    commit = "2e463a05d100327ca47ac218281906921038fd95",
+    importpath = "google.golang.org/grpc",
 )

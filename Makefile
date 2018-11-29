@@ -7,24 +7,30 @@ build: compile
 
 .PHONY: dep
 dep:
-	go get github.com/google/go-cloud/wire/cmd/wire
+	dep ensure
 
-.PHONY: dep-go
-dep-go:
+.PHONY: dep-update
+dep-update:
+	rm -rf ./vendor
+	dep ensure -update
+
+.PHONY: dep-wire
+dep-wire:
+	go get github.com/google/go-cloud/wire/cmd/wire
 	cd pkg/${PACKAGE} && wire
 
 # build
 
 .PHONY: gazelle
 gazelle:
-	bazel run gazelle
+	bazel run gazelle -- update-repos -from_file ./Gopkg.lock
 
 .PHONY: compile
-compile: dep-go gazelle gen-proto
+compile: gazelle dep-wire gen-proto
 	bazel query //... | grep "//pkg/${PACKAGE}" | xargs bazel build --define IMAGE_TAG=test
 
 .PHONY: run
-run: dep-go gazelle gen-proto
+run: gazelle dep-wire gen-proto
 	bazel query //... | grep "//pkg/${PACKAGE}" | xargs bazel run --define IMAGE_TAG=test
 
 # proto
@@ -37,11 +43,11 @@ gen-proto:
 # test
 
 .PHONY: test-go
-test-go: dep-go gazelle
+test-go: gazelle dep-wire
 	bazel query //... | grep "//pkg/${PACKAGE}" | xargs bazel test --define IMAGE_TAG=latest
 
 .PHONY: test-go-all
-test-go-all: dep-go gazelle
+test-go-all: gazelle dep-wire
 	bazel query //... | grep "//pkg" | xargs bazel test --define IMAGE_TAG=latest
 
 # container
