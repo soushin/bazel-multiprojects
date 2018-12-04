@@ -6,7 +6,11 @@ go_library(
     importpath = "github.com/soushin/bazel-multiprojects/pkg/ops/cmd/deploy",
     visibility = ["//visibility:public"],
     deps = [
-        "@com_github_ghodss_yaml//:go_default_library",
         "@com_github_spf13_cobra//:go_default_library",
+        "@io_k8s_sigs_kustomize//k8sdeps:go_default_library",
+        "@io_k8s_sigs_kustomize//pkg/fs:go_default_library",
+        "@io_k8s_sigs_kustomize//pkg/loader:go_default_library",
+        "@io_k8s_sigs_kustomize//pkg/target:go_default_library",
+        "@io_k8s_sigs_kustomize//pkg/transformers/config:go_default_library",
     ],
 )

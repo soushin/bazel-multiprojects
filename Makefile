@@ -3,6 +3,9 @@ PACKAGE = public_go
 .PHONY: build
 build: compile
 
+.PHONY: clean
+clean: bazel clean
+
 # dependencies
 
 .PHONY: install
