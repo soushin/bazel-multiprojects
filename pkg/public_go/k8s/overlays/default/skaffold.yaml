@@ -2,7 +2,7 @@ apiVersion: skaffold/v1beta1
 kind: Config
 build:
   artifacts:
-  - image: index.docker.io/soushin/bazel-multiprojects-go
+  - image: soushin/bazel-multiprojects-go
     context: ../../../../../
     bazel:
       target: //pkg/public_go:container_image.tar

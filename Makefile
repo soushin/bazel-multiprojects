@@ -29,9 +29,6 @@ dep-wire:
 .PHONY: gazelle
 gazelle:
 	bazel run gazelle
-
-.PHONY: gazelle-update-repos
-gazelle-update-repos:
 	bazel run gazelle -- update-repos -from_file ./Gopkg.lock
 
 .PHONY: compile

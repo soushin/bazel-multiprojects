@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: publicgo
+  test: aaa
 spec:
   template:
     spec:
@@ -10,3 +11,4 @@ spec:
         env:
         - name: GO_COLOR
           value: blue
+

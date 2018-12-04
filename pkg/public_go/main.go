@@ -8,6 +8,8 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -70,6 +72,34 @@ func main() {
 	if err := http.ListenAndServe(fmt.Sprintf(":%s", httpPort), nil); err != nil {
 		log.Fatalf("failed to serve http server")
 	}
+
+	var srv http.Server
+
+	idleConnsClosed := make(chan struct{})
+	go func() {
+		sigint := make(chan os.Signal, 1)
+
+		// interrupt signal sent from terminal
+		signal.Notify(sigint, os.Interrupt)
+		// sigterm signal sent from kubernetes
+		signal.Notify(sigint, syscall.SIGTERM)
+
+		<-sigint
+
+		// We received an interrupt signal, shut down.
+		if err := srv.Shutdown(context.Background()); err != nil {
+			// Error from closing listeners, or context timeout:
+			log.Printf("HTTP server Shutdown: %v", err)
+		}
+		close(idleConnsClosed)
+	}()
+
+	if err := srv.ListenAndServe(); err != http.ErrServerClosed {
+		// Error starting or closing listener:
+		log.Printf("HTTP server ListenAndServe: %v", err)
+	}
+
+	<-idleConnsClosed
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
