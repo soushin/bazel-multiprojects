@@ -10,3 +10,4 @@ spec:
         env:
         - name: GO_COLOR
           value: blue
+

@@ -111,7 +111,7 @@ go_repository(
 
 go_repository(
     name = "org_golang_x_net",
-    commit = "adae6a3d119ae4890b46832a2e88a95adc62b8e7",
+    commit = "fae4c4e3ad76c295c3d6d259f898136b4bf833a8",
     importpath = "golang.org/x/net",
 )
 
@@ -137,4 +137,72 @@ go_repository(
     name = "org_golang_google_grpc",
     commit = "2e463a05d100327ca47ac218281906921038fd95",
     importpath = "google.golang.org/grpc",
+)
+
+go_repository(
+    name = "com_github_ghodss_yaml",
+    commit = "0ca9ea5df5451ffdf184b4428c902747c2c11cd7",
+    importpath = "github.com/ghodss/yaml",
+)
+
+go_repository(
+    name = "com_github_gogo_protobuf",
+    commit = "636bf0302bc95575d69441b25a2603156ffdddf1",
+    importpath = "github.com/gogo/protobuf",
+)
+
+go_repository(
+    name = "com_github_google_gofuzz",
+    commit = "24818f796faf91cd76ec7bddd72458fbced7a6c1",
+    importpath = "github.com/google/gofuzz",
+)
+
+go_repository(
+    name = "com_github_inconshreveable_mousetrap",
+    commit = "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75",
+    importpath = "github.com/inconshreveable/mousetrap",
+)
+
+go_repository(
+    name = "com_github_spf13_cobra",
+    commit = "ef82de70bb3f60c65fb8eebacbb2d122ef517385",
+    importpath = "github.com/spf13/cobra",
+)
+
+go_repository(
+    name = "com_github_spf13_pflag",
+    commit = "298182f68c66c05229eb03ac171abe6e309ee79a",
+    importpath = "github.com/spf13/pflag",
+)
+
+go_repository(
+    name = "in_gopkg_inf_v0",
+    commit = "d2d2541c53f18d2a059457998ce2876cc8e67cbf",
+    importpath = "gopkg.in/inf.v0",
+)
+
+go_repository(
+    name = "in_gopkg_yaml_v2",
+    commit = "51d6538a90f86fe93ac480b35f37b2be17fef232",
+    importpath = "gopkg.in/yaml.v2",
+)
+
+go_repository(
+    name = "io_k8s_api",
+    build_file_proto_mode = "disable",
+    commit = "8b7507fac302640dd5f1efbf9643199952cc58db",
+    importpath = "k8s.io/api",
+)
+
+go_repository(
+    name = "io_k8s_apimachinery",
+    build_file_proto_mode = "disable",
+    commit = "af2f90f9922d5bb462e28b799bd27342aeb794b3",
+    importpath = "k8s.io/apimachinery",
+)
+
+go_repository(
+    name = "io_k8s_klog",
+    commit = "a5bc97fbc634d635061f3146511332c7e313a55a",
+    importpath = "k8s.io/klog",
 )
