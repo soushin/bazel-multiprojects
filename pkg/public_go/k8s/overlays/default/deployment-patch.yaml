@@ -10,4 +10,4 @@ spec:
         image: soushin/bazel-multiprojects-go
         env:
         - name: GO_COLOR
-          value: white
+          value: local

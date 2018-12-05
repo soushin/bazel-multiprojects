@@ -22,8 +22,8 @@ spec:
         - containerPort: 50051
           name: grpc-public
         env:
-          - name: GO_COLOR
-            value: black
+        - name: GO_COLOR
+          value: black
         readinessProbe:
           httpGet:
             path: /
