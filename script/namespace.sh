@@ -2,7 +2,7 @@
 
 NAMESPACES='
 default
-blue
+dev
 '
 
 CLUSTER='docker-for-desktop-cluster'

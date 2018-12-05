@@ -9,5 +9,5 @@ spec:
       - name: publicgo
         env:
         - name: GO_COLOR
-          value: blue
+          value: dev
 

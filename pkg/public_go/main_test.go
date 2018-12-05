@@ -35,7 +35,7 @@ func TestServer(t *testing.T) {
 
 func TestColorServer(t *testing.T) {
 
-	color := "blue"
+	color := "dev"
 	os.Setenv("GO_COLOR", color)
 
 	req, err := http.NewRequest("GET", "/", nil)

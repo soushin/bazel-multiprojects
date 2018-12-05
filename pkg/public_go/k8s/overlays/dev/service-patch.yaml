@@ -6,6 +6,6 @@ spec:
   type: NodePort
   ports:
   - port: 8080
-    nodePort: 30020
+    nodePort: 32010
   - port: 50051
-    nodePort: 30021
+    nodePort: 32011

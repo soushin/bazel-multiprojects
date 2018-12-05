@@ -5,4 +5,4 @@ patchesStrategicMerge:
 - deployment-patch.yaml
 - service-patch.yaml
 
-namePrefix: bule-
+namePrefix: dev-

@@ -3,5 +3,6 @@ bases:
 
 patchesStrategicMerge:
 - deployment-patch.yaml
+- service-patch.yaml
 
 namePrefix: default-
