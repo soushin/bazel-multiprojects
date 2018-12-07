@@ -1,0 +1,17 @@
+apiVersion: build.knative.dev/v1alpha1
+kind: Build
+metadata:
+  name: bazel-build
+spec:
+  serviceAccountName: docker-hub-account
+  source:
+    git:
+      url: https://github.com/soushin/bazel-multiprojects
+      revision: master
+  template:
+    name: bazel
+    arguments:
+    - name: TARGET
+      value: //pkg/public_go:container_push
+    - name: IMAGE_TAG
+      value: latest

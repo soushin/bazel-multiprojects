@@ -1,6 +1,6 @@
 .idea
 .ijwb
 
-bazel-*
+/bazel-*
 entry.md
 vendor
