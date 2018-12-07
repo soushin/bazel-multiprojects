@@ -3,6 +3,7 @@
 NAMESPACES='
 default
 dev
+knative-build
 '
 
 CLUSTER='docker-for-desktop-cluster'

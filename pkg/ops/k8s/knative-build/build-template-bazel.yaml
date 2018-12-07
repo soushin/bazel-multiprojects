@@ -1,0 +1,15 @@
+apiVersion: build.knative.dev/v1alpha1
+kind: BuildTemplate
+metadata:
+  name: bazel
+spec:
+  parameters:
+  - name: TARGET
+    description: The name of the Bazel "container_push" target to run
+  - name: IMAGE_TAG
+    description: The tag of image
+
+  steps:
+  - name: build-and-push
+    image: gcr.io/cloud-builders/bazel
+    args: ['run', '--platforms=@io_bazel_rules_go//go/toolchain:linux_amd64', '--define', 'IMAGE_TAG=${IMAGE_TAG}', '${TARGET}']
