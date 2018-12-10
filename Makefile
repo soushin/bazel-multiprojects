@@ -35,11 +35,11 @@ gazelle:
 	bazel run gazelle -- update-repos -from_file ./Gopkg.lock
 
 .PHONY: compile
-compile: gazelle dep-wire gen-proto
+compile: gazelle gen-proto
 	bazel query //... | grep "//pkg/${PACKAGE}" | xargs bazel build --define IMAGE_TAG=test
 
 .PHONY: run
-run: gazelle dep-wire gen-proto
+run: gazelle gen-proto
 	bazel query //... | grep "//pkg/${PACKAGE}" | xargs bazel run --define IMAGE_TAG=test
 
 # proto
@@ -47,7 +47,7 @@ run: gazelle dep-wire gen-proto
 .PHONY: gen-proto
 gen-proto:
 	$(eval protos = $(shell find ./proto -type d -d 1 | sed 's/\.\/proto\///g' | xargs))
-	@for p in $(protos); do bazel build //proto/$$p:proto_buf && mv -f bazel-genfiles/proto/$$p/proto_buf/proto/$$p/$$p.pb.go proto/$$p; done
+	@for p in $(protos); do bazel build //proto/$$p:proto_buf && mv -f bazel-genfiles/proto/$$p/proto_buf/proto/$$p/*.pb.go proto/$$p; done
 
 # test
 

@@ -105,19 +105,19 @@ go_repository(
 
 go_repository(
     name = "org_golang_google_genproto",
-    commit = "31ac5d88444a9e7ad18077db9a165d793ad06a2e",
+    commit = "bd91e49a0898e27abb88c339b432fa53d7497ac0",
     importpath = "google.golang.org/genproto",
 )
 
 go_repository(
     name = "org_golang_x_net",
-    commit = "fae4c4e3ad76c295c3d6d259f898136b4bf833a8",
+    commit = "610586996380ceef02dd726cc09df7e00a3f8e56",
     importpath = "golang.org/x/net",
 )
 
 go_repository(
     name = "org_golang_x_sys",
-    commit = "4ed8d59d0b35e1e29334a206d1b3f38b1e5dfb31",
+    commit = "2a47403f2ae58167c4d75973960ccc62b28cb0d8",
     importpath = "golang.org/x/sys",
 )
 
@@ -135,7 +135,7 @@ go_repository(
 
 go_repository(
     name = "org_golang_google_grpc",
-    commit = "2e463a05d100327ca47ac218281906921038fd95",
+    commit = "df014850f6dee74ba2fc94874043a9f3f75fbfd8",
     importpath = "google.golang.org/grpc",
 )
 
@@ -205,4 +205,76 @@ go_repository(
     name = "io_k8s_klog",
     commit = "a5bc97fbc634d635061f3146511332c7e313a55a",
     importpath = "k8s.io/klog",
+)
+
+go_repository(
+    name = "com_github_gorilla_websocket",
+    commit = "66b9c49e59c6c48f0ffce28c2d8b8a5678502c6d",
+    importpath = "github.com/gorilla/websocket",
+)
+
+go_repository(
+    name = "com_github_nlopes_slack",
+    commit = "38ac5e8c495bc1d4d299c6a14930376f32145eb8",
+    importpath = "github.com/nlopes/slack",
+)
+
+go_repository(
+    name = "com_github_pkg_errors",
+    commit = "645ef00459ed84a119197bfb8d8205042c6df63d",
+    importpath = "github.com/pkg/errors",
+)
+
+go_repository(
+    name = "com_github_kelseyhightower_envconfig",
+    commit = "f611eb38b3875cc3bd991ca91c51d06446afa14c",
+    importpath = "github.com/kelseyhightower/envconfig",
+)
+
+go_repository(
+    name = "org_uber_go_atomic",
+    commit = "1ea20fb1cbb1cc08cbd0d913a96dead89aa18289",
+    importpath = "go.uber.org/atomic",
+)
+
+go_repository(
+    name = "org_uber_go_multierr",
+    commit = "3c4937480c32f4c13a875a1829af76c98ca3d40a",
+    importpath = "go.uber.org/multierr",
+)
+
+go_repository(
+    name = "org_uber_go_zap",
+    commit = "ff33455a0e382e8a81d14dd7c922020b6b5e7982",
+    importpath = "go.uber.org/zap",
+)
+
+go_repository(
+    name = "com_github_go_redis_redis",
+    commit = "b3d9bf10f6666b2ee5100a6f3f84f4caf3b4e37d",
+    importpath = "github.com/go-redis/redis",
+)
+
+go_repository(
+    name = "com_github_google_go_github",
+    commit = "35781f7f4db7b3d7fc3359527472838da65023c6",
+    importpath = "github.com/google/go-github",
+)
+
+go_repository(
+    name = "com_github_google_go_querystring",
+    commit = "44c6ddd0a2342c386950e880b658017258da92fc",
+    importpath = "github.com/google/go-querystring",
+)
+
+go_repository(
+    name = "org_golang_google_appengine",
+    commit = "4a4468ece617fc8205e99368fa2200e9d1fad421",
+    importpath = "google.golang.org/appengine",
+)
+
+go_repository(
+    name = "org_golang_x_oauth2",
+    commit = "d668ce993890a79bda886613ee587a69dd5da7a6",
+    importpath = "golang.org/x/oauth2",
 )

@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bot
+spec:
+  selector:
+    matchLabels:
+      app: bot
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: bot
+        deployment: bot
+    spec:
+      containers:
+      - name: bot
+        image: index.docker.io/soushin/bazel-multiprojects-bot:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          name: http-public
+        - containerPort: 50051
+          name: grpc-public
+        env:
+        - name: PORT
+          value: "8080"
+        - name: BOT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: bot-secret
+              key: TOKEN
+        - name: VERIFICATION_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: bot-secret
+              key: VERIFICATION_TOKEN
+        - name: BOT_ID
+          valueFrom:
+            secretKeyRef:
+              name: bot-secret
+              key: BOT_ID
+        - name: CHANNEL_ID
+          valueFrom:
+            secretKeyRef:
+              name: bot-secret
+              key: CHANNEL_ID
+        - name: OPS_ADDR
+          value: "ops:50051"
+        readinessProbe:
+          httpGet:
+            path: /hc
+            port: 8080
+          initialDelaySeconds: 30
+        livenessProbe:
+          httpGet:
+            path: /hc
+            port: 8080
+          initialDelaySeconds: 30
+

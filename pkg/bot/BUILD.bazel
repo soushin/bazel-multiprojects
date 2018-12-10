@@ -3,22 +3,22 @@ load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["main.go"],
-    importpath = "github.com/soushin/bazel-multiprojects/pkg/ops",
+    importpath = "github.com/soushin/bazel-multiprojects/pkg/bot",
     visibility = ["//visibility:private"],
     deps = [
-        "//pkg/ops/client:go_default_library",
-        "//pkg/ops/handler:go_default_library",
-        "//pkg/ops/server:go_default_library",
+        "//pkg/bot/client:go_default_library",
+        "//pkg/bot/handler:go_default_library",
+        "//pkg/bot/listener:go_default_library",
         "//proto/ops:go_default_library",
         "@com_github_kelseyhightower_envconfig//:go_default_library",
+        "@com_github_nlopes_slack//:go_default_library",
         "@org_golang_google_grpc//:go_default_library",
-        "@org_golang_google_grpc//reflection:go_default_library",
         "@org_uber_go_zap//:go_default_library",
     ],
 )
 
 go_binary(
-    name = "ops",
+    name = "bot",
     embed = [":go_default_library"],
     visibility = ["//visibility:public"],
 )
@@ -28,9 +28,9 @@ load("@io_bazel_rules_docker//container:container.bzl", "container_image", "cont
 container_image(
     name = "container_image",
     base = "@distroless_base_image//image",
-    files = [":ops"],
+    files = [":bot"],
     cmd = [
-        "/ops",
+        "/bot",
     ],
 )
 
@@ -39,6 +39,6 @@ container_push(
     image = ":container_image",
     format = "Docker",
     registry = "index.docker.io",
-    repository = "soushin/bazel-multiprojects-ops",
+    repository = "soushin/bazel-multiprojects-bot",
     tag = "$(IMAGE_TAG)",
 )

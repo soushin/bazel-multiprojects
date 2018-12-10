@@ -1,0 +1,14 @@
+apiVersion: skaffold/v1beta1
+kind: Config
+build:
+  artifacts:
+  - image: soushin/bazel-multiprojects-bot
+    context: ../../../../../
+    bazel:
+      target: //pkg/bot:container_image.tar
+      args:
+      - --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64
+  local:
+    push: false
+deploy:
+  kustomize: {}

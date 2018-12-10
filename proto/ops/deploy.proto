@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package ops;
+
+import "google/protobuf/empty.proto";
+
+service Deploy {
+    rpc GetTargets (google.protobuf.Empty) returns (TargetOutbound);
+}
+
+message Target{
+    string repo = 1;
+    string pkg = 2;
+}
+
+message TargetOutbound {
+    repeated Target targets = 1;
+}

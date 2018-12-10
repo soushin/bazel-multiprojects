@@ -1,7 +1,7 @@
 package usecase
 
 import (
-		"github.com/google/go-cloud/wire"
+	"github.com/google/go-cloud/wire"
 )
 
 var GreetUsecaseSet = wire.NewSet(ProvideUseCase)

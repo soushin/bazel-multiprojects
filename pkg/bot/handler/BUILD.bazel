@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "action.go",
+        "interaction.go",
+        "slack.go",
+        "submission.go",
+        "type.go",
+    ],
+    importpath = "github.com/soushin/bazel-multiprojects/pkg/bot/handler",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/bot/client:go_default_library",
+        "//proto/ops:go_default_library",
+        "@com_github_nlopes_slack//:go_default_library",
+        "@com_github_pkg_errors//:go_default_library",
+        "@io_bazel_rules_go//proto/wkt:empty_go_proto",
+        "@org_golang_google_grpc//metadata:go_default_library",
+        "@org_uber_go_zap//:go_default_library",
+    ],
+)
