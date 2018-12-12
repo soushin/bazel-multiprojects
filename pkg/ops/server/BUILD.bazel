@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["deploy.go"],
+    importpath = "github.com/soushin/bazel-multiprojects/pkg/ops/server",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/ops/handler:go_default_library",
+        "//proto/ops:go_default_library",
+        "@com_github_pkg_errors//:go_default_library",
+        "@io_bazel_rules_go//proto/wkt:empty_go_proto",
+        "@org_uber_go_zap//:go_default_library",
+    ],
+)

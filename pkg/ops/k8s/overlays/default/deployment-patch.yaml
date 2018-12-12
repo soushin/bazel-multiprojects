@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ops
+spec:
+  template:
+    spec:
+      containers:
+      - name: ops
+        image: soushin/bazel-multiprojects-ops

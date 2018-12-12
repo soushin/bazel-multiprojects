@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ops
+spec:
+  selector:
+    matchLabels:
+      app: ops
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ops
+        deployment: ops
+    spec:
+      containers:
+      - name: ops
+        image: index.docker.io/soushin/bazel-multiprojects-ops:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          name: http-public
+        - containerPort: 50051
+          name: grpc-public
+        env:
+        - name: HTTP_PORT
+          value: "8080"
+        - name: GRPC_PORT
+          value: "50051"
+        - name: GITHUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: github-token
+              key: TOKEN
+        readinessProbe:
+          httpGet:
+            path: /hc
+            port: 8080
+          initialDelaySeconds: 30
+        livenessProbe:
+          httpGet:
+            path: /hc
+            port: 8080
+          initialDelaySeconds: 30
+

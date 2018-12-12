@@ -1,0 +1,30 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
+load("@build_stack_rules_proto//go:go_grpc_compile.bzl", "go_grpc_compile")
+
+proto_library(
+    name = "ops_proto",
+    srcs = ["deploy.proto"],
+    visibility = ["//visibility:public"],
+    deps = ["@com_google_protobuf//:empty_proto"],
+)
+
+go_proto_library(
+    name = "ops_go_proto",
+    compilers = ["@io_bazel_rules_go//proto:go_grpc"],
+    importpath = "github.com/soushin/bazel-multiprojects/proto/ops",
+    proto = ":ops_proto",
+    visibility = ["//visibility:public"],
+)
+
+go_library(
+    name = "go_default_library",
+    embed = [":ops_go_proto"],
+    importpath = "github.com/soushin/bazel-multiprojects/proto/ops",
+    visibility = ["//visibility:public"],
+)
+
+go_grpc_compile(
+    name = "proto_buf",
+    deps = [":ops_proto"],
+)
