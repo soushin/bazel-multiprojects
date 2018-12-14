@@ -46,8 +46,6 @@ func (h actionHandler) Handle(action string, ev *slack.MessageEvent) error {
 			return errors.Wrapf(err, "failed to get targets")
 		}
 
-		h.appLog.With(zap.Any("res", res)).Info("Debug")
-
 		options := make([]slack.AttachmentActionOption, len(res.Targets))
 		for i, target := range res.Targets {
 			options[i] = slack.AttachmentActionOption{

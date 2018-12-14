@@ -46,14 +46,12 @@ func (h *submissionHandler) Handle(message slack.InteractionCallback) error {
 		go func() {
 			observer := func(result *ops.DeployOutbound) {
 				switch result.Progress {
-				case ops.DeployProgress_STARTED:
-					h.respond(state.ResponseURL, result.Message)
-				case ops.DeployProgress_RUNNING:
-					h.respond(state.ResponseURL, result.Message)
+				case ops.DeployProgress_STARTED | ops.DeployProgress_RUNNING:
+					h.respond(state.ResponseURL, result.Title, result.Message, "#327aef")
 				case ops.DeployProgress_SUCCESS:
-					h.respond(state.ResponseURL, result.Message)
+					h.respond(state.ResponseURL, result.Title, result.Message, "#17d6a0")
 				case ops.DeployProgress_ERROR:
-					h.respond(state.ResponseURL, result.Message)
+					h.respond(state.ResponseURL, result.Title, result.Message, "#e74c3c")
 				}
 			}
 
@@ -71,10 +69,12 @@ func (h *submissionHandler) Handle(message slack.InteractionCallback) error {
 	return nil
 }
 
-func (h *submissionHandler) respond(responseURL, message string) {
+func (h *submissionHandler) respond(responseURL, title, message, color string) {
 	attachments := []slack.Attachment{
 		{
-			Title: message,
+			Title: title,
+			Text:  message,
+			Color: color,
 		},
 	}
 	response := client.RespondPayload{

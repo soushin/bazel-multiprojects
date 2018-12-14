@@ -68,7 +68,7 @@ func _main(args []string) int {
 	slackListener := listener.NewSlackListener(appLog, slackCli, opsDeployCli, env.BotID, env.ChannelID)
 	go slackListener.ListenAndResponse()
 
-	http.Handle("/interaction", handler.NewSlackHandler(appLog, slackCli, slackExtCli, deployRepository, env.VerificationToken))
+	http.Handle("/interaction", handler.NewSlackHandler(appLog, slackCli, slackExtCli, opsDeployCli, deployRepository, env.VerificationToken))
 	http.HandleFunc("/hc", hcHandler)
 
 	appLog.With(zap.String("port", env.Port)).Info("Server listening")

@@ -6,6 +6,7 @@ import "google/protobuf/empty.proto";
 
 service Deploy {
     rpc GetTargets (google.protobuf.Empty) returns (TargetOutbound);
+    rpc GetBranches (BranchInbound) returns (BranchOutbound);
     rpc Execute(DeployInbound) returns (stream DeployOutbound);
 }
 
@@ -18,6 +19,19 @@ message TargetOutbound {
     repeated Target targets = 1;
 }
 
+message Branch{
+    string name = 1;
+}
+
+message BranchInbound {
+    string owner = 1;
+    string repository = 2;
+}
+
+message BranchOutbound {
+    repeated Branch branches = 1;
+}
+
 message DeployInbound {
     string owner = 1;
     string repository = 2;
@@ -26,8 +40,9 @@ message DeployInbound {
 }
 
 message DeployOutbound {
-    string message = 1;
-    DeployProgress progress = 2;
+    string title = 1;
+    string message = 2;
+    DeployProgress progress = 3;
 }
 
 enum DeployProgress {
