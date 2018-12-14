@@ -33,11 +33,11 @@ func (s *deployServerImpl) GetTargets(ctx context.Context, in *empty.Empty) (*op
 
 	owner := "soushin"
 	repo := "bazel-multiprojects"
-	path := "pkg"
+	packagePath := "pkg"
 
-	paths, err := s.handler.Target(owner, repo, path)
+	paths, err := s.handler.Target(owner, repo, packagePath)
 	if err != nil {
-		s.appLog.With(zap.Strings("params", []string{owner, repo, path})).Error("invalid process")
+		s.appLog.With(zap.Strings("params", []string{owner, repo, packagePath})).Error("invalid process")
 		return nil, errors.Wrap(err, "failed to get targets")
 	}
 
@@ -58,9 +58,9 @@ func (s *deployServerImpl) Execute(inbound *ops.DeployInbound, stream ops.Deploy
 
 	owner := inbound.Owner
 	repo := inbound.Repository
-	path := inbound.Package
+	packagePath := inbound.Package
 	branch := inbound.Branch
-	target := fmt.Sprintf("%s/%s:%s@%s", owner, repo, path, branch)
+	target := fmt.Sprintf("%s/%s:%s@%s", owner, repo, packagePath, branch)
 
 	if err := stream.Send(&ops.DeployOutbound{
 		Progress: ops.DeployProgress_STARTED,
@@ -76,9 +76,9 @@ func (s *deployServerImpl) Execute(inbound *ops.DeployInbound, stream ops.Deploy
 		return err
 	}
 
-	err := s.handler.Execute(owner, repo, branch, path)
+	err := s.handler.Execute(owner, repo, branch, packagePath)
 	if err != nil {
-		s.appLog.With(zap.Strings("params", []string{owner, repo, branch, path})).Error("invalid process")
+		s.appLog.With(zap.Strings("params", []string{owner, repo, branch, packagePath})).Error("invalid process")
 		if err := stream.Send(&ops.DeployOutbound{
 			Progress: ops.DeployProgress_ERROR,
 			Message:  err.Error(),

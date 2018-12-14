@@ -8,8 +8,8 @@ import (
 )
 
 type DeployHandler interface {
-	Target(owner, repo, path string) ([]string, error)
-	Execute(owner, repo, branch, path string) error
+	Target(owner, repo, packagePath string) ([]string, error)
+	Execute(owner, repo, branch, packagePath string) error
 }
 
 type deployHandlerImpl struct {
@@ -24,17 +24,17 @@ func NewDeployHandler(appLog *zap.Logger, useCase usecase.DeployUseCase) DeployH
 	}
 }
 
-func (h *deployHandlerImpl) Target(owner, repo, path string) ([]string, error) {
-	targets, err := h.useCase.GetContents(owner, repo, path)
+func (h *deployHandlerImpl) Target(owner, repo, packagePath string) ([]string, error) {
+	targets, err := h.useCase.GetContents(owner, repo, packagePath)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to useCase.GetContents")
 	}
 	return targets, nil
 }
 
-func (h *deployHandlerImpl) Execute(owner, repo, branch, path string) error {
+func (h *deployHandlerImpl) Execute(owner, repo, branch, packagePath string) error {
 
-	if err := h.useCase.ExistsContent(owner, repo, path); err != nil {
+	if err := h.useCase.ExistsContent(owner, repo, packagePath); err != nil {
 		return errors.Wrap(err, "failed to useCase.ExistsContent")
 	}
 
@@ -47,8 +47,12 @@ func (h *deployHandlerImpl) Execute(owner, repo, branch, path string) error {
 		return errors.Wrap(err, "failed to useCase.CheckoutBranch")
 	}
 
-	if err := h.useCase.ReplaceImage(checkoutPath, path, owner, repo, branch); err != nil {
+	if err := h.useCase.ReplaceImage(checkoutPath, packagePath, owner, repo, branch); err != nil {
 		return errors.Wrap(err, "failed to useCase.ReplaceImage")
+	}
+
+	if err := h.useCase.Build(checkoutPath, packagePath); err != nil {
+		return errors.Wrap(err, "failed to useCase.Build")
 	}
 
 	return nil

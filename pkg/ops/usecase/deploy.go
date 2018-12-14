@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os/exec"
 	"strings"
@@ -15,11 +16,12 @@ import (
 )
 
 type DeployUseCase interface {
-	GetContents(owner, repo, path string) ([]string, error)
-	ExistsContent(owner, repo, path string) error
+	GetContents(owner, repo, packagePath string) ([]string, error)
+	ExistsContent(owner, repo, packagePath string) error
 	ExistsBranch(owner, repo, branch string) error
 	CheckoutBranch(owner, repo, branch string) (string, error)
 	ReplaceImage(checkoutPath, packagePath, owner, repo, branch string) error
+	Build(checkoutPath, packagePath string) error
 }
 
 const (
@@ -38,9 +40,9 @@ func NewDeployUseCase(appLog *zap.Logger, githubCli client.GitHubClient) DeployU
 	}
 }
 
-func (u *deployUseCaseImpl) GetContents(owner, repo, path string) ([]string, error) {
+func (u *deployUseCaseImpl) GetContents(owner, repo, packagePath string) ([]string, error) {
 
-	contents, err := u.githubCli.GetContents(owner, repo, path)
+	contents, err := u.githubCli.GetContents(owner, repo, packagePath)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get from github")
 	}
@@ -53,9 +55,9 @@ func (u *deployUseCaseImpl) GetContents(owner, repo, path string) ([]string, err
 	return targets, nil
 }
 
-func (u *deployUseCaseImpl) ExistsContent(owner, repo, path string) error {
+func (u *deployUseCaseImpl) ExistsContent(owner, repo, packagePath string) error {
 
-	_, err := u.githubCli.GetContents(owner, repo, fmt.Sprintf("%s/%s", path, K8s_PATH))
+	_, err := u.githubCli.GetContents(owner, repo, fmt.Sprintf("%s/%s", packagePath, K8s_PATH))
 	if err != nil {
 		return errors.Wrap(err, "failed to get from github")
 	}
@@ -65,16 +67,16 @@ func (u *deployUseCaseImpl) ExistsContent(owner, repo, path string) error {
 
 func (h *deployUseCaseImpl) ExistsBranch(owner, repo, branch string) error {
 
-	//if _, err := h.githubCli.GetBranch(owner, repo, branch); err != nil {
-	//	return errors.Wrap(err, "failed to get from github")
-	//}
+	if _, err := h.githubCli.GetBranch(owner, repo, branch); err != nil {
+		return errors.Wrap(err, "failed to get from github")
+	}
 
 	return nil
 }
 
 func (u *deployUseCaseImpl) CheckoutBranch(owner, repo, branch string) (string, error) {
 
-	checkOutDir := fmt.Sprintf("/tmp/deploy/%s", fmt.Sprintf("%s_%s", time.Now().Format("20060102150405"), branch))
+	checkOutDir := fmt.Sprintf("/tmp/deploy/%s", fmt.Sprintf("%s_%s", time.Now().Format("20060102150405"), u.getTag(branch)))
 	fullPath := fmt.Sprintf("git@github.com:%s/%s", owner, repo)
 
 	cmd := exec.Command("git", "clone", fullPath, "-b", branch, checkOutDir)
@@ -122,6 +124,43 @@ func (u *deployUseCaseImpl) ReplaceImage(checkoutPath, packagePath, owner, repo,
 		return errors.Wrap(err, "failed to get spec of image")
 	}
 
+	replaceImage := fmt.Sprintf("%s/%s:%s", owner, repo, u.getTag(branch))
+	replaceData := strings.Replace(string(data), originalImage, replaceImage, 1)
+
+	if err := ioutil.WriteFile(deploymentPath, []byte(replaceData), 0644); err != nil {
+		return errors.Wrapf(err, "failed to write file %s", deploymentPath)
+	}
+
+	return nil
+}
+
+func (u *deployUseCaseImpl) Build(checkoutPath, packagePath string) error {
+
+	kustomizePath := fmt.Sprintf("%s/%s/%s", checkoutPath, packagePath, K8s_PATH)
+	kustomizeCmd := exec.Command("kustomize", "build", kustomizePath)
+	manifest, err := u.runCmdOut(kustomizeCmd)
+	if err != nil {
+		return errors.Wrap(err, "failed to kustomize build")
+	}
+
+	kubectlCmd := exec.Command("kubectl", "apply", "-f", "-")
+	stdin, err := kubectlCmd.StdinPipe()
+	if err != nil {
+		return errors.Wrap(err, "failed to kubectl apply, stdin")
+	}
+	io.WriteString(stdin, string(manifest))
+	stdin.Close()
+	out, err := u.runCmdOut(kubectlCmd)
+	if err != nil {
+		return errors.Wrap(err, "failed to kubectl apply")
+	}
+
+	u.appLog.With(zap.String("out", string(out))).Info("Debug")
+
+	return nil
+}
+
+func (u *deployUseCaseImpl) getTag(branch string) string {
 	var tag = ""
 	if branch == "master" {
 		tag = "latest"
@@ -129,13 +168,7 @@ func (u *deployUseCaseImpl) ReplaceImage(checkoutPath, packagePath, owner, repo,
 		r := strings.NewReplacer("/", "_")
 		tag = r.Replace(branch)
 	}
-
-	replaceImage := fmt.Sprintf("%s/%s:%s", owner, repo, tag)
-	replaceData := strings.Replace(string(data), originalImage, replaceImage, 1)
-
-	u.appLog.With(zap.String("replaceData", replaceData)).Info("debug")
-
-	return nil
+	return tag
 }
 
 func (u *deployUseCaseImpl) getValue(m map[string]interface{}, key string) (interface{}, bool) {
@@ -187,9 +220,9 @@ func (u *deployUseCaseImpl) runCmdOut(cmd *exec.Cmd) ([]byte, error) {
 
 	if len(stderr) > 0 {
 		u.appLog.With(zap.String("out", string(stdout)),
-			zap.String("err", string(stdout))).Info("Command output")
+			zap.String("err", string(stdout))).Debug("Command output")
 	} else {
-		u.appLog.With(zap.String("out", string(stdout))).Info("Command output")
+		u.appLog.With(zap.String("out", string(stdout))).Debug("Command output")
 	}
 
 	return stdout, nil
