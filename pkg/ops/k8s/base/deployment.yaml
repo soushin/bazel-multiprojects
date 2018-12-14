@@ -27,11 +27,17 @@ spec:
           value: "8080"
         - name: GRPC_PORT
           value: "50051"
+        - name: GIT_SSH_COMMAND
+          value: "ssh -i /root/ssh_key/SSH_KEY -o StrictHostKeyChecking=no -F /dev/null"
         - name: GITHUB_TOKEN
           valueFrom:
             secretKeyRef:
               name: github-token
               key: TOKEN
+        volumeMounts:
+        - name: github-token
+          mountPath: "/root/ssh_key"
+          readOnly: true
         readinessProbe:
           httpGet:
             path: /hc
@@ -42,4 +48,9 @@ spec:
             path: /hc
             port: 8080
           initialDelaySeconds: 30
+      volumes:
+      - name: github-token
+        secret:
+          secretName: github-token
+          defaultMode: 256
 

@@ -7,25 +7,28 @@ import (
 	"net/url"
 	"strings"
 
+	"go.uber.org/zap"
+
 	"github.com/nlopes/slack"
 	"github.com/soushin/bazel-multiprojects/pkg/bot/client"
-
-	"go.uber.org/zap"
+	"github.com/soushin/bazel-multiprojects/pkg/bot/repository"
 )
 
 type slackHandler struct {
 	appLog            *zap.Logger
 	slackCli          *slack.Client
 	slackExtCli       client.SlackExt
+	deployRepository  repository.DeployRepository
 	verificationToken string
 }
 
 func NewSlackHandler(appLog *zap.Logger, slackCli *slack.Client, slackExtCli client.SlackExt,
-	verificationToken string) *slackHandler {
+	deployRepository repository.DeployRepository, verificationToken string) *slackHandler {
 	return &slackHandler{
 		appLog:            appLog,
 		slackCli:          slackCli,
 		slackExtCli:       slackExtCli,
+		deployRepository:  deployRepository,
 		verificationToken: verificationToken,
 	}
 }
@@ -69,8 +72,9 @@ func (h slackHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if strings.Contains(jsonStr, `"type":"dialog_submission"`) {
 
 		submission := submissionHandler{
-			appLog:      h.appLog,
-			slackExtCli: h.slackExtCli,
+			appLog:           h.appLog,
+			slackExtCli:      h.slackExtCli,
+			deployRepository: h.deployRepository,
 		}
 
 		if err := submission.Handle(message); err != nil {

@@ -1,4 +1,5 @@
 apiVersion: skaffold/v1beta1
 kind: Config
 deploy:
-  kustomize: {}
+  kustomize:
+    path: pkg/public_go/k8s/overlays/dev

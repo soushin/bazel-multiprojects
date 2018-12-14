@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/nlopes/slack"
 	"github.com/pkg/errors"
@@ -26,9 +27,15 @@ func (h interactionHandler) Handle(message slack.InteractionCallback) (*slack.Me
 		originalMessage := message.OriginalMessage
 		originalMessage.ReplaceOriginal = true
 
+		selected := strings.Split(message.Actions[0].SelectedOptions[0].Value, ",")
+
 		state := DialogState{
 			ResponseURL:    message.ResponseURL,
 			SubmissionType: SubmissionInputTag,
+			Values: map[string]string{
+				"fullName": selected[0],
+				"package":  selected[1],
+			},
 		}
 
 		stateStr, err := json.Marshal(state)
@@ -40,10 +47,10 @@ func (h interactionHandler) Handle(message slack.InteractionCallback) (*slack.Me
 		dialog := slack.Dialog{
 			TriggerID:  message.TriggerID,
 			CallbackID: message.CallbackID,
-			Title:      "タグを入力してね",
+			Title:      "ブランチを入力してね",
 			State:      string(stateStr),
 			Elements: []slack.DialogElement{
-				slack.NewTextInput("tag", "タグ", "latest"),
+				slack.NewTextInput("branch", "ブランチ", "master"),
 			},
 		}
 
