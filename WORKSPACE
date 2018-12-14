@@ -75,6 +75,13 @@ container_pull(
     digest = "sha256:628939ac8bf3f49571d05c6c76b8688cb4a851af6c7088e599388259875bde20",
 )
 
+container_pull(
+    name = "ops_base_image",
+    registry = "index.docker.io",
+    repository = "soushin/bazel-multiprojects-ops-base",
+    digest = "sha256:5c272657409aa2f1b85f56003a34d685e7f80bbbf8c19eb001f9b9b1f34644fa",
+)
+
 load(
     "@io_bazel_rules_docker//go:image.bzl",
     _go_image_repos = "repositories",

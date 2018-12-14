@@ -9,6 +9,7 @@ go_library(
         "//pkg/ops/client:go_default_library",
         "//pkg/ops/handler:go_default_library",
         "//pkg/ops/server:go_default_library",
+        "//pkg/ops/usecase:go_default_library",
         "//proto/ops:go_default_library",
         "@com_github_kelseyhightower_envconfig//:go_default_library",
         "@org_golang_google_grpc//:go_default_library",
@@ -27,7 +28,7 @@ load("@io_bazel_rules_docker//container:container.bzl", "container_image", "cont
 
 container_image(
     name = "container_image",
-    base = "@distroless_base_image//image",
+    base = "@ops_base_image//image",
     files = [":ops"],
     cmd = [
         "/ops",

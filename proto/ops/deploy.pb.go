@@ -24,6 +24,35 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
+type DeployProgress int32
+
+const (
+	DeployProgress_STARTED DeployProgress = 0
+	DeployProgress_RUNNING DeployProgress = 1
+	DeployProgress_SUCCESS DeployProgress = 2
+	DeployProgress_ERROR   DeployProgress = 3
+)
+
+var DeployProgress_name = map[int32]string{
+	0: "STARTED",
+	1: "RUNNING",
+	2: "SUCCESS",
+	3: "ERROR",
+}
+var DeployProgress_value = map[string]int32{
+	"STARTED": 0,
+	"RUNNING": 1,
+	"SUCCESS": 2,
+	"ERROR":   3,
+}
+
+func (x DeployProgress) String() string {
+	return proto.EnumName(DeployProgress_name, int32(x))
+}
+func (DeployProgress) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_deploy_552e077eeca74c09, []int{0}
+}
+
 type Target struct {
 	Repo                 string   `protobuf:"bytes,1,opt,name=repo,proto3" json:"repo,omitempty"`
 	Pkg                  string   `protobuf:"bytes,2,opt,name=pkg,proto3" json:"pkg,omitempty"`
@@ -36,7 +65,7 @@ func (m *Target) Reset()         { *m = Target{} }
 func (m *Target) String() string { return proto.CompactTextString(m) }
 func (*Target) ProtoMessage()    {}
 func (*Target) Descriptor() ([]byte, []int) {
-	return fileDescriptor_deploy_3364d5d8fd46ce69, []int{0}
+	return fileDescriptor_deploy_552e077eeca74c09, []int{0}
 }
 func (m *Target) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Target.Unmarshal(m, b)
@@ -81,7 +110,7 @@ func (m *TargetOutbound) Reset()         { *m = TargetOutbound{} }
 func (m *TargetOutbound) String() string { return proto.CompactTextString(m) }
 func (*TargetOutbound) ProtoMessage()    {}
 func (*TargetOutbound) Descriptor() ([]byte, []int) {
-	return fileDescriptor_deploy_3364d5d8fd46ce69, []int{1}
+	return fileDescriptor_deploy_552e077eeca74c09, []int{1}
 }
 func (m *TargetOutbound) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_TargetOutbound.Unmarshal(m, b)
@@ -108,9 +137,120 @@ func (m *TargetOutbound) GetTargets() []*Target {
 	return nil
 }
 
+type DeployInbound struct {
+	Owner                string   `protobuf:"bytes,1,opt,name=owner,proto3" json:"owner,omitempty"`
+	Repository           string   `protobuf:"bytes,2,opt,name=repository,proto3" json:"repository,omitempty"`
+	Branch               string   `protobuf:"bytes,3,opt,name=branch,proto3" json:"branch,omitempty"`
+	Package              string   `protobuf:"bytes,4,opt,name=package,proto3" json:"package,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DeployInbound) Reset()         { *m = DeployInbound{} }
+func (m *DeployInbound) String() string { return proto.CompactTextString(m) }
+func (*DeployInbound) ProtoMessage()    {}
+func (*DeployInbound) Descriptor() ([]byte, []int) {
+	return fileDescriptor_deploy_552e077eeca74c09, []int{2}
+}
+func (m *DeployInbound) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeployInbound.Unmarshal(m, b)
+}
+func (m *DeployInbound) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeployInbound.Marshal(b, m, deterministic)
+}
+func (dst *DeployInbound) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeployInbound.Merge(dst, src)
+}
+func (m *DeployInbound) XXX_Size() int {
+	return xxx_messageInfo_DeployInbound.Size(m)
+}
+func (m *DeployInbound) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeployInbound.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeployInbound proto.InternalMessageInfo
+
+func (m *DeployInbound) GetOwner() string {
+	if m != nil {
+		return m.Owner
+	}
+	return ""
+}
+
+func (m *DeployInbound) GetRepository() string {
+	if m != nil {
+		return m.Repository
+	}
+	return ""
+}
+
+func (m *DeployInbound) GetBranch() string {
+	if m != nil {
+		return m.Branch
+	}
+	return ""
+}
+
+func (m *DeployInbound) GetPackage() string {
+	if m != nil {
+		return m.Package
+	}
+	return ""
+}
+
+type DeployOutbound struct {
+	Message              string         `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	Progress             DeployProgress `protobuf:"varint,2,opt,name=progress,proto3,enum=ops.DeployProgress" json:"progress,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
+	XXX_unrecognized     []byte         `json:"-"`
+	XXX_sizecache        int32          `json:"-"`
+}
+
+func (m *DeployOutbound) Reset()         { *m = DeployOutbound{} }
+func (m *DeployOutbound) String() string { return proto.CompactTextString(m) }
+func (*DeployOutbound) ProtoMessage()    {}
+func (*DeployOutbound) Descriptor() ([]byte, []int) {
+	return fileDescriptor_deploy_552e077eeca74c09, []int{3}
+}
+func (m *DeployOutbound) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeployOutbound.Unmarshal(m, b)
+}
+func (m *DeployOutbound) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeployOutbound.Marshal(b, m, deterministic)
+}
+func (dst *DeployOutbound) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeployOutbound.Merge(dst, src)
+}
+func (m *DeployOutbound) XXX_Size() int {
+	return xxx_messageInfo_DeployOutbound.Size(m)
+}
+func (m *DeployOutbound) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeployOutbound.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeployOutbound proto.InternalMessageInfo
+
+func (m *DeployOutbound) GetMessage() string {
+	if m != nil {
+		return m.Message
+	}
+	return ""
+}
+
+func (m *DeployOutbound) GetProgress() DeployProgress {
+	if m != nil {
+		return m.Progress
+	}
+	return DeployProgress_STARTED
+}
+
 func init() {
 	proto.RegisterType((*Target)(nil), "ops.Target")
 	proto.RegisterType((*TargetOutbound)(nil), "ops.TargetOutbound")
+	proto.RegisterType((*DeployInbound)(nil), "ops.DeployInbound")
+	proto.RegisterType((*DeployOutbound)(nil), "ops.DeployOutbound")
+	proto.RegisterEnum("ops.DeployProgress", DeployProgress_name, DeployProgress_value)
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -126,6 +266,7 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type DeployClient interface {
 	GetTargets(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*TargetOutbound, error)
+	Execute(ctx context.Context, in *DeployInbound, opts ...grpc.CallOption) (Deploy_ExecuteClient, error)
 }
 
 type deployClient struct {
@@ -145,9 +286,42 @@ func (c *deployClient) GetTargets(ctx context.Context, in *empty.Empty, opts ...
 	return out, nil
 }
 
+func (c *deployClient) Execute(ctx context.Context, in *DeployInbound, opts ...grpc.CallOption) (Deploy_ExecuteClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_Deploy_serviceDesc.Streams[0], "/ops.Deploy/Execute", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &deployExecuteClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type Deploy_ExecuteClient interface {
+	Recv() (*DeployOutbound, error)
+	grpc.ClientStream
+}
+
+type deployExecuteClient struct {
+	grpc.ClientStream
+}
+
+func (x *deployExecuteClient) Recv() (*DeployOutbound, error) {
+	m := new(DeployOutbound)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // DeployServer is the server API for Deploy service.
 type DeployServer interface {
 	GetTargets(context.Context, *empty.Empty) (*TargetOutbound, error)
+	Execute(*DeployInbound, Deploy_ExecuteServer) error
 }
 
 func RegisterDeployServer(s *grpc.Server, srv DeployServer) {
@@ -172,6 +346,27 @@ func _Deploy_GetTargets_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Deploy_Execute_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(DeployInbound)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(DeployServer).Execute(m, &deployExecuteServer{stream})
+}
+
+type Deploy_ExecuteServer interface {
+	Send(*DeployOutbound) error
+	grpc.ServerStream
+}
+
+type deployExecuteServer struct {
+	grpc.ServerStream
+}
+
+func (x *deployExecuteServer) Send(m *DeployOutbound) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 var _Deploy_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "ops.Deploy",
 	HandlerType: (*DeployServer)(nil),
@@ -181,24 +376,41 @@ var _Deploy_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Deploy_GetTargets_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Execute",
+			Handler:       _Deploy_Execute_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "proto/ops/deploy.proto",
 }
 
-func init() { proto.RegisterFile("proto/ops/deploy.proto", fileDescriptor_deploy_3364d5d8fd46ce69) }
+func init() { proto.RegisterFile("proto/ops/deploy.proto", fileDescriptor_deploy_552e077eeca74c09) }
 
-var fileDescriptor_deploy_3364d5d8fd46ce69 = []byte{
-	// 189 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x4c, 0x8e, 0x41, 0xeb, 0x82, 0x40,
-	0x10, 0x47, 0xf1, 0xef, 0x1f, 0xa3, 0x11, 0x22, 0x36, 0x10, 0xb1, 0x8b, 0x08, 0x81, 0xa7, 0x5d,
-	0xb0, 0x43, 0x74, 0xae, 0xe8, 0x18, 0x48, 0x5f, 0x20, 0x71, 0xdb, 0x43, 0xd6, 0x0c, 0xee, 0x7a,
-	0xe8, 0xdb, 0x87, 0xb3, 0x09, 0xdd, 0x86, 0xf7, 0x7b, 0xec, 0x3e, 0x48, 0xa8, 0x47, 0x87, 0x0a,
-	0xc9, 0xaa, 0x56, 0x53, 0x87, 0x6f, 0xc9, 0x40, 0x84, 0x48, 0x36, 0x5b, 0x1b, 0x44, 0xd3, 0x69,
-	0xc5, 0xa8, 0x19, 0xee, 0x4a, 0x3f, 0xc9, 0x7d, 0x8d, 0x42, 0x42, 0x74, 0xbd, 0xf5, 0x46, 0x3b,
-	0x21, 0xe0, 0xbf, 0xd7, 0x84, 0x69, 0x90, 0x07, 0xe5, 0xbc, 0xe6, 0x5b, 0x2c, 0x21, 0xa4, 0x87,
-	0x49, 0xff, 0x18, 0x8d, 0x67, 0xb1, 0x83, 0x85, 0xf7, 0x2f, 0x83, 0x6b, 0x70, 0x78, 0xb5, 0x62,
-	0x03, 0x33, 0xc7, 0xc4, 0xa6, 0x41, 0x1e, 0x96, 0x71, 0x15, 0x4b, 0x24, 0x2b, 0xbd, 0x55, 0x4f,
-	0x5b, 0x75, 0x80, 0xe8, 0xc8, 0x69, 0x62, 0x0f, 0x70, 0xd6, 0xce, 0xef, 0x56, 0x24, 0xd2, 0xe7,
-	0xc9, 0x29, 0x4f, 0x9e, 0xc6, 0xbc, 0x6c, 0xf5, 0xf3, 0xca, 0xf4, 0x57, 0x13, 0xb1, 0xb4, 0xfd,
-	0x04, 0x00, 0x00, 0xff, 0xff, 0xb9, 0xf9, 0xf6, 0xba, 0xf0, 0x00, 0x00, 0x00,
+var fileDescriptor_deploy_552e077eeca74c09 = []byte{
+	// 356 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x4c, 0x51, 0xcd, 0x6b, 0xe2, 0x40,
+	0x14, 0xdf, 0x18, 0x4d, 0xd6, 0x27, 0x2b, 0xe1, 0xb9, 0x48, 0x70, 0x61, 0x91, 0xc0, 0x82, 0xec,
+	0x21, 0x29, 0xb6, 0x50, 0x7a, 0x6c, 0x35, 0x88, 0x17, 0x2d, 0xa3, 0x9e, 0x7a, 0x4a, 0x74, 0x9a,
+	0x16, 0x35, 0x33, 0xcc, 0x4c, 0xb0, 0xfe, 0xf7, 0x25, 0x33, 0x89, 0xe4, 0x36, 0xbf, 0x8f, 0x79,
+	0xbf, 0xf7, 0x01, 0x43, 0x2e, 0x98, 0x62, 0x11, 0xe3, 0x32, 0x3a, 0x50, 0x7e, 0x62, 0xd7, 0x50,
+	0x13, 0x68, 0x33, 0x2e, 0x47, 0x7f, 0x32, 0xc6, 0xb2, 0x13, 0x8d, 0x34, 0x95, 0x16, 0xef, 0x11,
+	0x3d, 0x73, 0x55, 0x39, 0x82, 0x10, 0x9c, 0x6d, 0x22, 0x32, 0xaa, 0x10, 0xa1, 0x2d, 0x28, 0x67,
+	0xbe, 0x35, 0xb6, 0x26, 0x5d, 0xa2, 0xdf, 0xe8, 0x81, 0xcd, 0x8f, 0x99, 0xdf, 0xd2, 0x54, 0xf9,
+	0x0c, 0x1e, 0xa1, 0x6f, 0xfc, 0xeb, 0x42, 0xa5, 0xac, 0xc8, 0x0f, 0xf8, 0x0f, 0x5c, 0xa5, 0x19,
+	0xe9, 0x5b, 0x63, 0x7b, 0xd2, 0x9b, 0xf6, 0x42, 0xc6, 0x65, 0x68, 0x5c, 0xa4, 0xd6, 0x82, 0x0b,
+	0xfc, 0x9a, 0xeb, 0xd6, 0x96, 0xb9, 0xf9, 0xf7, 0x1b, 0x3a, 0xec, 0x92, 0x53, 0x51, 0x05, 0x1a,
+	0x80, 0x7f, 0x01, 0xca, 0x64, 0xf9, 0xa9, 0x98, 0xb8, 0x56, 0xc1, 0x0d, 0x06, 0x87, 0xe0, 0xa4,
+	0x22, 0xc9, 0xf7, 0x1f, 0xbe, 0xad, 0xb5, 0x0a, 0xa1, 0x0f, 0x2e, 0x4f, 0xf6, 0xc7, 0x24, 0xa3,
+	0x7e, 0x5b, 0x0b, 0x35, 0x0c, 0xde, 0xa0, 0x6f, 0x82, 0x6f, 0x1d, 0xfb, 0xe0, 0x9e, 0xa9, 0x94,
+	0xa5, 0xd7, 0x64, 0xd7, 0x10, 0x23, 0xf8, 0xc9, 0x05, 0xcb, 0x04, 0x95, 0x52, 0x67, 0xf7, 0xa7,
+	0x03, 0x3d, 0x8c, 0x29, 0xf0, 0x5a, 0x49, 0xe4, 0x66, 0xfa, 0xff, 0x52, 0x17, 0xaf, 0x35, 0xec,
+	0x81, 0xbb, 0xd9, 0x3e, 0x93, 0x6d, 0x3c, 0xf7, 0x7e, 0x94, 0x80, 0xec, 0x56, 0xab, 0xe5, 0x6a,
+	0xe1, 0x59, 0x5a, 0xd9, 0xcd, 0x66, 0xf1, 0x66, 0xe3, 0xb5, 0xb0, 0x0b, 0x9d, 0x98, 0x90, 0x35,
+	0xf1, 0xec, 0xe9, 0x15, 0x1c, 0x53, 0x03, 0x9f, 0x00, 0x16, 0x54, 0x99, 0xcd, 0x49, 0x1c, 0x86,
+	0xe6, 0x70, 0x61, 0x7d, 0xb8, 0x30, 0x2e, 0x0f, 0x37, 0x1a, 0x34, 0xf6, 0x7b, 0x9b, 0xe9, 0x01,
+	0xdc, 0xf8, 0x8b, 0xee, 0x0b, 0x45, 0x11, 0x1b, 0x2d, 0x57, 0xcb, 0x1e, 0x35, 0xc7, 0xa8, 0xff,
+	0xdc, 0x59, 0xa9, 0xa3, 0x4b, 0xdf, 0x7f, 0x07, 0x00, 0x00, 0xff, 0xff, 0x59, 0xcd, 0x6d, 0x39,
+	0x40, 0x02, 0x00, 0x00,
 }

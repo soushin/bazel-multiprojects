@@ -14,6 +14,7 @@ import (
 
 type DeployServer interface {
 	GetTargets(ctx context.Context, in *empty.Empty) (*ops.TargetOutbound, error)
+	Execute(inbound *ops.DeployInbound, stream ops.Deploy_ExecuteServer) error
 }
 
 type deployServerImpl struct {
@@ -51,4 +52,47 @@ func (s *deployServerImpl) GetTargets(ctx context.Context, in *empty.Empty) (*op
 	return &ops.TargetOutbound{
 		Targets: targets,
 	}, nil
+}
+
+func (s *deployServerImpl) Execute(inbound *ops.DeployInbound, stream ops.Deploy_ExecuteServer) error {
+
+	owner := inbound.Owner
+	repo := inbound.Repository
+	path := inbound.Package
+	branch := inbound.Branch
+	target := fmt.Sprintf("%s/%s:%s@%s", owner, repo, path, branch)
+
+	if err := stream.Send(&ops.DeployOutbound{
+		Progress: ops.DeployProgress_STARTED,
+		Message:  fmt.Sprintf("Started deploy: %s", target),
+	}); err != nil {
+		return err
+	}
+
+	if err := stream.Send(&ops.DeployOutbound{
+		Progress: ops.DeployProgress_RUNNING,
+		Message:  fmt.Sprintf("Running deploy: %s", target),
+	}); err != nil {
+		return err
+	}
+
+	err := s.handler.Execute(owner, repo, branch, path)
+	if err != nil {
+		s.appLog.With(zap.Strings("params", []string{owner, repo, branch, path})).Error("invalid process")
+		if err := stream.Send(&ops.DeployOutbound{
+			Progress: ops.DeployProgress_ERROR,
+			Message:  err.Error(),
+		}); err != nil {
+			return err
+		}
+	}
+
+	if err := stream.Send(&ops.DeployOutbound{
+		Progress: ops.DeployProgress_SUCCESS,
+		Message:  fmt.Sprintf("Succeess deploy: %s", target),
+	}); err != nil {
+		return err
+	}
+
+	return nil
 }

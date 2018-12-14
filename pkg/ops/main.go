@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/soushin/bazel-multiprojects/pkg/ops/usecase"
+
 	"github.com/soushin/bazel-multiprojects/pkg/ops/server"
 
 	"go.uber.org/zap"
@@ -40,8 +42,11 @@ func _main(args []string) int {
 	// client
 	gitHubCli := client.NewGitHubClient(appLog, env.GitHubToken)
 
+	// useCase
+	deployUseCase := usecase.NewDeployUseCase(appLog, gitHubCli)
+
 	// handler
-	deployHandler := handler.NewDeployHandler(appLog, gitHubCli)
+	deployHandler := handler.NewDeployHandler(appLog, deployUseCase)
 
 	// serve gRPC server
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", env.GrpcPort))

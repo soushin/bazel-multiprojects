@@ -1,4 +1,5 @@
 PACKAGE = public_go
+NAMESPACE = default
 
 .PHONY: build
 build: compile
@@ -69,3 +70,8 @@ container-build:
 container-push:
 	$(eval image = $(shell git rev-parse --abbrev-ref @ | sed 's/\//_/g'))
 	bazel query //... | grep "//pkg/${PACKAGE}:container_push" | xargs bazel run --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 --define IMAGE_TAG=$(image)
+
+# deploy
+.PHONY: deploy
+deploy: gazelle
+	skaffold deploy -f pkg/${PACKAGE}/k8s/overlays/${NAMESPACE}/skaffold.yaml

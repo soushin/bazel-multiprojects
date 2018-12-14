@@ -6,6 +6,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/soushin/bazel-multiprojects/pkg/bot/repository"
+
 	"github.com/soushin/bazel-multiprojects/proto/ops"
 	"google.golang.org/grpc"
 
@@ -40,10 +42,14 @@ func _main(args []string) int {
 		return 1
 	}
 
+	// cli
 	defaultHttpCLI := &http.Client{
 		Timeout: 10 * time.Second,
 	}
+	slackCli := slack.New(env.BotToken)
+	slackExtCli := client.NewSlackExt(appLog, defaultHttpCLI)
 
+	// gRPC client
 	conn, err := grpc.Dial(
 		env.OpsAddr,
 		grpc.WithInsecure(),
@@ -53,16 +59,16 @@ func _main(args []string) int {
 		return 1
 	}
 	defer conn.Close()
-
 	opsDeployCli := ops.NewDeployClient(conn)
 
+	// repository
+	deployRepository := repository.NewDeployRepository(appLog, opsDeployCli)
+
 	appLog.Info("Start slack event listening")
-	slackCli := slack.New(env.BotToken)
-	slackExtCli := client.NewSlackExt(appLog, defaultHttpCLI)
 	slackListener := listener.NewSlackListener(appLog, slackCli, opsDeployCli, env.BotID, env.ChannelID)
 	go slackListener.ListenAndResponse()
 
-	http.Handle("/interaction", handler.NewSlackHandler(appLog, slackCli, slackExtCli, env.VerificationToken))
+	http.Handle("/interaction", handler.NewSlackHandler(appLog, slackCli, slackExtCli, deployRepository, env.VerificationToken))
 	http.HandleFunc("/hc", hcHandler)
 
 	appLog.With(zap.String("port", env.Port)).Info("Server listening")

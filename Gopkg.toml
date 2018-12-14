@@ -61,3 +61,7 @@
 [[constraint]]
   name = "golang.org/x/oauth2"
   revision = "d668ce993890a79bda886613ee587a69dd5da7a6"
+
+[[constraint]]
+  name = "github.com/ghodss/yaml"
+  version = "1.0.0"

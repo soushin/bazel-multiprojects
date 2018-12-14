@@ -3,7 +3,6 @@ kind: Config
 build:
   artifacts:
   - image: soushin/bazel-multiprojects-bot
-    context: ../../../../../
     bazel:
       target: //pkg/bot:container_image.tar
       args:
@@ -11,4 +10,8 @@ build:
   local:
     push: false
 deploy:
-  kustomize: {}
+  kustomize:
+    path: pkg/bot/k8s/overlays/default/
+    flags:
+      apply:
+      - "--namespace=default"
