@@ -21,7 +21,7 @@ type DeployUseCase interface {
 	ExistsBranch(owner, repo, branch string) error
 	CheckoutBranch(owner, repo, branch string) (string, error)
 	ReplaceImage(checkoutPath, packagePath, owner, repo, branch string) error
-	Build(checkoutPath, packagePath string) error
+	Build(checkoutPath, packagePath string) (string, error)
 }
 
 const (
@@ -134,30 +134,28 @@ func (u *deployUseCaseImpl) ReplaceImage(checkoutPath, packagePath, owner, repo,
 	return nil
 }
 
-func (u *deployUseCaseImpl) Build(checkoutPath, packagePath string) error {
+func (u *deployUseCaseImpl) Build(checkoutPath, packagePath string) (string, error) {
 
 	kustomizePath := fmt.Sprintf("%s/%s/%s", checkoutPath, packagePath, K8s_PATH)
 	kustomizeCmd := exec.Command("kustomize", "build", kustomizePath)
 	manifest, err := u.runCmdOut(kustomizeCmd)
 	if err != nil {
-		return errors.Wrap(err, "failed to kustomize build")
+		return "", errors.Wrap(err, "failed to kustomize build")
 	}
 
 	kubectlCmd := exec.Command("kubectl", "apply", "-f", "-")
 	stdin, err := kubectlCmd.StdinPipe()
 	if err != nil {
-		return errors.Wrap(err, "failed to kubectl apply, stdin")
+		return "", errors.Wrap(err, "failed to kubectl apply, stdin")
 	}
 	io.WriteString(stdin, string(manifest))
 	stdin.Close()
 	out, err := u.runCmdOut(kubectlCmd)
 	if err != nil {
-		return errors.Wrap(err, "failed to kubectl apply")
+		return "", errors.Wrap(err, "failed to kubectl apply")
 	}
 
-	u.appLog.With(zap.String("out", string(out))).Info("Debug")
-
-	return nil
+	return string(out), nil
 }
 
 func (u *deployUseCaseImpl) getTag(branch string) string {

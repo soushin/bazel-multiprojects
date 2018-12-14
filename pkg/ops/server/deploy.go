@@ -64,23 +64,26 @@ func (s *deployServerImpl) Execute(inbound *ops.DeployInbound, stream ops.Deploy
 
 	if err := stream.Send(&ops.DeployOutbound{
 		Progress: ops.DeployProgress_STARTED,
-		Message:  fmt.Sprintf("Started deploy: %s", target),
+		Title:    fmt.Sprintf("Started deploy: %s", target),
+		Message:  "start.",
 	}); err != nil {
 		return err
 	}
 
 	if err := stream.Send(&ops.DeployOutbound{
 		Progress: ops.DeployProgress_RUNNING,
-		Message:  fmt.Sprintf("Running deploy: %s", target),
+		Title:    fmt.Sprintf("Running deploy: %s", target),
+		Message:  "running...",
 	}); err != nil {
 		return err
 	}
 
-	err := s.handler.Execute(owner, repo, branch, packagePath)
+	res, err := s.handler.Execute(owner, repo, branch, packagePath)
 	if err != nil {
 		s.appLog.With(zap.Strings("params", []string{owner, repo, branch, packagePath})).Error("invalid process")
 		if err := stream.Send(&ops.DeployOutbound{
 			Progress: ops.DeployProgress_ERROR,
+			Title:    fmt.Sprintf("Error occured: %s", target),
 			Message:  err.Error(),
 		}); err != nil {
 			return err
@@ -89,7 +92,8 @@ func (s *deployServerImpl) Execute(inbound *ops.DeployInbound, stream ops.Deploy
 
 	if err := stream.Send(&ops.DeployOutbound{
 		Progress: ops.DeployProgress_SUCCESS,
-		Message:  fmt.Sprintf("Succeess deploy: %s", target),
+		Title:    fmt.Sprintf("Completed apply: %s", target),
+		Message:  res,
 	}); err != nil {
 		return err
 	}

@@ -26,8 +26,9 @@ message DeployInbound {
 }
 
 message DeployOutbound {
-    string message = 1;
-    DeployProgress progress = 2;
+    string title = 1;
+    string message = 2;
+    DeployProgress progress = 3;
 }
 
 enum DeployProgress {

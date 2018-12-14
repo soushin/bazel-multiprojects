@@ -54,8 +54,6 @@ func (h slackHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h.appLog.With(zap.String("jsonStr", jsonStr)).Info("Debug")
-
 	var message slack.InteractionCallback
 	if err := json.Unmarshal([]byte(jsonStr), &message); err != nil {
 		h.appLog.With(zap.String("json", jsonStr)).Error("Failed to decode json message from slack")
