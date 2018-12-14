@@ -13,6 +13,7 @@ import (
 type GitHubClient interface {
 	GetContents(owner, repo, path string) ([]*github.RepositoryContent, error)
 	GetBranch(owner, repo, branch string) (*github.Branch, error)
+	GetBranches(owner, repo string) ([]*github.Branch, error)
 }
 
 type gitHubClientImpl struct {
@@ -57,10 +58,27 @@ func (c *gitHubClientImpl) GetBranch(owner, repo, branch string) (*github.Branch
 			zap.String("repo", repo),
 			zap.String("branch", branch),
 			zap.Error(err)).Error("invalid process")
-		return nil, errors.Wrapf(err, "failed to get contents")
+		return nil, errors.Wrapf(err, "failed to get branch")
 	}
 
 	return githubBranch, nil
+}
+
+func (c *gitHubClientImpl) GetBranches(owner, repo string) ([]*github.Branch, error) {
+
+	ctx := context.Background()
+	cli := c.getClient(ctx)
+
+	githubBranches, _, err := cli.Repositories.ListBranches(ctx, owner, repo, &github.ListOptions{})
+	if err != nil {
+		c.appLog.With(
+			zap.String("owner", owner),
+			zap.String("repo", repo),
+			zap.Error(err)).Error("invalid process")
+		return nil, errors.Wrapf(err, "failed to get branches")
+	}
+
+	return githubBranches, nil
 }
 
 func (c *gitHubClientImpl) getClient(ctx context.Context) *github.Client {

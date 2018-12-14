@@ -9,6 +9,7 @@ import (
 
 type DeployHandler interface {
 	Target(owner, repo, packagePath string) ([]string, error)
+	Branches(owner, repo string) ([]string, error)
 	Execute(owner, repo, branch, packagePath string) (string, error)
 }
 
@@ -30,6 +31,14 @@ func (h *deployHandlerImpl) Target(owner, repo, packagePath string) ([]string, e
 		return nil, errors.Wrap(err, "failed to useCase.GetContents")
 	}
 	return targets, nil
+}
+
+func (h *deployHandlerImpl) Branches(owner, repo string) ([]string, error) {
+	branches, err := h.useCase.GetBranches(owner, repo)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to useCase.GetBranches")
+	}
+	return branches, nil
 }
 
 func (h *deployHandlerImpl) Execute(owner, repo, branch, packagePath string) (string, error) {

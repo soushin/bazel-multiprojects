@@ -19,6 +19,7 @@ type DeployUseCase interface {
 	GetContents(owner, repo, packagePath string) ([]string, error)
 	ExistsContent(owner, repo, packagePath string) error
 	ExistsBranch(owner, repo, branch string) error
+	GetBranches(owner, repo string) ([]string, error)
 	CheckoutBranch(owner, repo, branch string) (string, error)
 	ReplaceImage(checkoutPath, packagePath, owner, repo, branch string) error
 	Build(checkoutPath, packagePath string) (string, error)
@@ -65,13 +66,28 @@ func (u *deployUseCaseImpl) ExistsContent(owner, repo, packagePath string) error
 	return nil
 }
 
-func (h *deployUseCaseImpl) ExistsBranch(owner, repo, branch string) error {
+func (u *deployUseCaseImpl) ExistsBranch(owner, repo, branch string) error {
 
-	if _, err := h.githubCli.GetBranch(owner, repo, branch); err != nil {
+	if _, err := u.githubCli.GetBranch(owner, repo, branch); err != nil {
 		return errors.Wrap(err, "failed to get from github")
 	}
 
 	return nil
+}
+
+func (u *deployUseCaseImpl) GetBranches(owner, repo string) ([]string, error) {
+
+	res, err := u.githubCli.GetBranches(owner, repo)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to get from github")
+	}
+
+	branches := make([]string, len(res))
+	for i, branch := range res {
+		branches[i] = *branch.Name
+	}
+
+	return branches, nil
 }
 
 func (u *deployUseCaseImpl) CheckoutBranch(owner, repo, branch string) (string, error) {

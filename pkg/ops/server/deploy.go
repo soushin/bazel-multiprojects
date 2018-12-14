@@ -14,6 +14,7 @@ import (
 
 type DeployServer interface {
 	GetTargets(ctx context.Context, in *empty.Empty) (*ops.TargetOutbound, error)
+	GetBranches(ctx context.Context, in *ops.BranchInbound) (*ops.BranchOutbound, error)
 	Execute(inbound *ops.DeployInbound, stream ops.Deploy_ExecuteServer) error
 }
 
@@ -52,6 +53,30 @@ func (s *deployServerImpl) GetTargets(ctx context.Context, in *empty.Empty) (*op
 	return &ops.TargetOutbound{
 		Targets: targets,
 	}, nil
+}
+
+func (s *deployServerImpl) GetBranches(ctx context.Context, in *ops.BranchInbound) (*ops.BranchOutbound, error) {
+
+	owner := in.Owner
+	repo := in.Repository
+
+	res, err := s.handler.Branches(owner, repo)
+	if err != nil {
+		s.appLog.With(zap.Strings("params", []string{owner, repo})).Error("invalid process")
+		return nil, errors.Wrap(err, "failed to get branches")
+	}
+
+	branches := make([]*ops.Branch, len(res))
+	for i, branch := range res {
+		branches[i] = &ops.Branch{
+			Name: branch,
+		}
+	}
+
+	return &ops.BranchOutbound{
+		Branches: branches,
+	}, nil
+
 }
 
 func (s *deployServerImpl) Execute(inbound *ops.DeployInbound, stream ops.Deploy_ExecuteServer) error {

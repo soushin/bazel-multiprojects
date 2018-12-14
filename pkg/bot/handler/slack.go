@@ -7,6 +7,8 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/soushin/bazel-multiprojects/proto/ops"
+
 	"go.uber.org/zap"
 
 	"github.com/nlopes/slack"
@@ -18,16 +20,18 @@ type slackHandler struct {
 	appLog            *zap.Logger
 	slackCli          *slack.Client
 	slackExtCli       client.SlackExt
+	opsDeployCli      ops.DeployClient
 	deployRepository  repository.DeployRepository
 	verificationToken string
 }
 
 func NewSlackHandler(appLog *zap.Logger, slackCli *slack.Client, slackExtCli client.SlackExt,
-	deployRepository repository.DeployRepository, verificationToken string) *slackHandler {
+	opsDeployCli ops.DeployClient, deployRepository repository.DeployRepository, verificationToken string) *slackHandler {
 	return &slackHandler{
 		appLog:            appLog,
 		slackCli:          slackCli,
 		slackExtCli:       slackExtCli,
+		opsDeployCli:      opsDeployCli,
 		deployRepository:  deployRepository,
 		verificationToken: verificationToken,
 	}
@@ -86,8 +90,9 @@ func (h slackHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	} else {
 
 		interaction := interactionHandler{
-			appLog:   h.appLog,
-			slackCli: h.slackCli,
+			appLog:       h.appLog,
+			slackCli:     h.slackCli,
+			opsDeployCli: h.opsDeployCli,
 		}
 
 		originalMessage, err := interaction.Handle(message)
