@@ -4,3 +4,4 @@
 /bazel-*
 entry.md
 vendor
+infra/image/prow

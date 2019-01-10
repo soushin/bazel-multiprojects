@@ -25,7 +25,7 @@ dep-update:
 
 .PHONY: dep-wire
 dep-wire:
-	go get github.com/google/go-cloud/wire/cmd/wire
+	go get github.com/google/wire/cmd/wire
 	cd pkg/${PACKAGE} && wire
 
 # build

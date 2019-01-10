@@ -29,6 +29,7 @@ require (
 	github.com/golang/protobuf v1.2.0
 	github.com/google/go-cloud v0.6.0
 	github.com/google/gofuzz v0.0.0-20170612174753-24818f796faf
+	github.com/google/wire v0.2.0 // indirect
 	github.com/googleapis/gax-go v2.0.2+incompatible // indirect
 	github.com/googleapis/gnostic v0.2.0
 	github.com/gopherjs/gopherjs v0.0.0-20181103185306-d547d1d9531e // indirect
