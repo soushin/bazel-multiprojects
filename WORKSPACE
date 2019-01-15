@@ -94,6 +94,13 @@ _go_image_repos()
 # ================================================================
 
 http_archive(
+    name = "com_google_protobuf",
+    sha256 = "983975ab66113cbaabea4b8ec9f3a73406d89ed74db9ae75c74888e685f956f8",
+    strip_prefix = "protobuf-66dc42d891a4fc8e9190c524fd67961688a37bbe",
+    url = "https://github.com/google/protobuf/archive/66dc42d891a4fc8e9190c524fd67961688a37bbe.tar.gz",
+)
+
+http_archive(
     name = "build_stack_rules_proto",
     urls = ["https://github.com/stackb/rules_proto/archive/1d6550fc2e62.tar.gz"],
     sha256 = "113e6792f5b20679285c86d91c163cc8c4d2b4d24d7a087ae4f233b5d9311012",
