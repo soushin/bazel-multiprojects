@@ -50,7 +50,7 @@ func (x DeployProgress) String() string {
 	return proto.EnumName(DeployProgress_name, int32(x))
 }
 func (DeployProgress) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_deploy_e890315ba3127612, []int{0}
+	return fileDescriptor_deploy_aacba782ad733907, []int{0}
 }
 
 type Target struct {
@@ -65,7 +65,7 @@ func (m *Target) Reset()         { *m = Target{} }
 func (m *Target) String() string { return proto.CompactTextString(m) }
 func (*Target) ProtoMessage()    {}
 func (*Target) Descriptor() ([]byte, []int) {
-	return fileDescriptor_deploy_e890315ba3127612, []int{0}
+	return fileDescriptor_deploy_aacba782ad733907, []int{0}
 }
 func (m *Target) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Target.Unmarshal(m, b)
@@ -110,7 +110,7 @@ func (m *TargetOutbound) Reset()         { *m = TargetOutbound{} }
 func (m *TargetOutbound) String() string { return proto.CompactTextString(m) }
 func (*TargetOutbound) ProtoMessage()    {}
 func (*TargetOutbound) Descriptor() ([]byte, []int) {
-	return fileDescriptor_deploy_e890315ba3127612, []int{1}
+	return fileDescriptor_deploy_aacba782ad733907, []int{1}
 }
 func (m *TargetOutbound) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_TargetOutbound.Unmarshal(m, b)
@@ -148,7 +148,7 @@ func (m *Branch) Reset()         { *m = Branch{} }
 func (m *Branch) String() string { return proto.CompactTextString(m) }
 func (*Branch) ProtoMessage()    {}
 func (*Branch) Descriptor() ([]byte, []int) {
-	return fileDescriptor_deploy_e890315ba3127612, []int{2}
+	return fileDescriptor_deploy_aacba782ad733907, []int{2}
 }
 func (m *Branch) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Branch.Unmarshal(m, b)
@@ -187,7 +187,7 @@ func (m *BranchInbound) Reset()         { *m = BranchInbound{} }
 func (m *BranchInbound) String() string { return proto.CompactTextString(m) }
 func (*BranchInbound) ProtoMessage()    {}
 func (*BranchInbound) Descriptor() ([]byte, []int) {
-	return fileDescriptor_deploy_e890315ba3127612, []int{3}
+	return fileDescriptor_deploy_aacba782ad733907, []int{3}
 }
 func (m *BranchInbound) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_BranchInbound.Unmarshal(m, b)
@@ -232,7 +232,7 @@ func (m *BranchOutbound) Reset()         { *m = BranchOutbound{} }
 func (m *BranchOutbound) String() string { return proto.CompactTextString(m) }
 func (*BranchOutbound) ProtoMessage()    {}
 func (*BranchOutbound) Descriptor() ([]byte, []int) {
-	return fileDescriptor_deploy_e890315ba3127612, []int{4}
+	return fileDescriptor_deploy_aacba782ad733907, []int{4}
 }
 func (m *BranchOutbound) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_BranchOutbound.Unmarshal(m, b)
@@ -273,7 +273,7 @@ func (m *DeployInbound) Reset()         { *m = DeployInbound{} }
 func (m *DeployInbound) String() string { return proto.CompactTextString(m) }
 func (*DeployInbound) ProtoMessage()    {}
 func (*DeployInbound) Descriptor() ([]byte, []int) {
-	return fileDescriptor_deploy_e890315ba3127612, []int{5}
+	return fileDescriptor_deploy_aacba782ad733907, []int{5}
 }
 func (m *DeployInbound) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_DeployInbound.Unmarshal(m, b)
@@ -334,7 +334,7 @@ func (m *DeployOutbound) Reset()         { *m = DeployOutbound{} }
 func (m *DeployOutbound) String() string { return proto.CompactTextString(m) }
 func (*DeployOutbound) ProtoMessage()    {}
 func (*DeployOutbound) Descriptor() ([]byte, []int) {
-	return fileDescriptor_deploy_e890315ba3127612, []int{6}
+	return fileDescriptor_deploy_aacba782ad733907, []int{6}
 }
 func (m *DeployOutbound) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_DeployOutbound.Unmarshal(m, b)
@@ -552,9 +552,9 @@ var _Deploy_serviceDesc = grpc.ServiceDesc{
 	Metadata: "proto/ops/deploy.proto",
 }
 
-func init() { proto.RegisterFile("proto/ops/deploy.proto", fileDescriptor_deploy_e890315ba3127612) }
+func init() { proto.RegisterFile("proto/ops/deploy.proto", fileDescriptor_deploy_aacba782ad733907) }
 
-var fileDescriptor_deploy_e890315ba3127612 = []byte{
+var fileDescriptor_deploy_aacba782ad733907 = []byte{
 	// 430 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x52, 0x5d, 0x6b, 0xdb, 0x30,
 	0x14, 0x9d, 0xeb, 0xc6, 0x6e, 0xaf, 0xa9, 0x31, 0x6a, 0x09, 0x26, 0x1b, 0xa3, 0x18, 0xc6, 0xca,

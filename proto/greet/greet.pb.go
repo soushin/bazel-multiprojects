@@ -34,7 +34,7 @@ func (m *GreetInbound) Reset()         { *m = GreetInbound{} }
 func (m *GreetInbound) String() string { return proto.CompactTextString(m) }
 func (*GreetInbound) ProtoMessage()    {}
 func (*GreetInbound) Descriptor() ([]byte, []int) {
-	return fileDescriptor_greet_d261c35b1bfe66d3, []int{0}
+	return fileDescriptor_greet_d8945c3785a7cf3a, []int{0}
 }
 func (m *GreetInbound) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_GreetInbound.Unmarshal(m, b)
@@ -72,7 +72,7 @@ func (m *GreetOutbound) Reset()         { *m = GreetOutbound{} }
 func (m *GreetOutbound) String() string { return proto.CompactTextString(m) }
 func (*GreetOutbound) ProtoMessage()    {}
 func (*GreetOutbound) Descriptor() ([]byte, []int) {
-	return fileDescriptor_greet_d261c35b1bfe66d3, []int{1}
+	return fileDescriptor_greet_d8945c3785a7cf3a, []int{1}
 }
 func (m *GreetOutbound) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_GreetOutbound.Unmarshal(m, b)
@@ -176,9 +176,9 @@ var _Greet_serviceDesc = grpc.ServiceDesc{
 	Metadata: "proto/greet/greet.proto",
 }
 
-func init() { proto.RegisterFile("proto/greet/greet.proto", fileDescriptor_greet_d261c35b1bfe66d3) }
+func init() { proto.RegisterFile("proto/greet/greet.proto", fileDescriptor_greet_d8945c3785a7cf3a) }
 
-var fileDescriptor_greet_d261c35b1bfe66d3 = []byte{
+var fileDescriptor_greet_d8945c3785a7cf3a = []byte{
 	// 118 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2f, 0x28, 0xca, 0x2f,
 	0xc9, 0xd7, 0x4f, 0x2f, 0x4a, 0x4d, 0x2d, 0x81, 0x90, 0x7a, 0x60, 0x11, 0x21, 0x56, 0x30, 0x47,
