@@ -34,7 +34,7 @@ func (m *EchoInbound) Reset()         { *m = EchoInbound{} }
 func (m *EchoInbound) String() string { return proto.CompactTextString(m) }
 func (*EchoInbound) ProtoMessage()    {}
 func (*EchoInbound) Descriptor() ([]byte, []int) {
-	return fileDescriptor_echo_36e1409cdcc3baaa, []int{0}
+	return fileDescriptor_echo_b76e9c412c4e5a98, []int{0}
 }
 func (m *EchoInbound) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_EchoInbound.Unmarshal(m, b)
@@ -72,7 +72,7 @@ func (m *EchoOutbound) Reset()         { *m = EchoOutbound{} }
 func (m *EchoOutbound) String() string { return proto.CompactTextString(m) }
 func (*EchoOutbound) ProtoMessage()    {}
 func (*EchoOutbound) Descriptor() ([]byte, []int) {
-	return fileDescriptor_echo_36e1409cdcc3baaa, []int{1}
+	return fileDescriptor_echo_b76e9c412c4e5a98, []int{1}
 }
 func (m *EchoOutbound) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_EchoOutbound.Unmarshal(m, b)
@@ -176,9 +176,9 @@ var _Echo_serviceDesc = grpc.ServiceDesc{
 	Metadata: "proto/echo/echo.proto",
 }
 
-func init() { proto.RegisterFile("proto/echo/echo.proto", fileDescriptor_echo_36e1409cdcc3baaa) }
+func init() { proto.RegisterFile("proto/echo/echo.proto", fileDescriptor_echo_b76e9c412c4e5a98) }
 
-var fileDescriptor_echo_36e1409cdcc3baaa = []byte{
+var fileDescriptor_echo_b76e9c412c4e5a98 = []byte{
 	// 116 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2d, 0x28, 0xca, 0x2f,
 	0xc9, 0xd7, 0x4f, 0x4d, 0xce, 0x80, 0x10, 0x7a, 0x60, 0xbe, 0x10, 0x0b, 0x88, 0xad, 0xa4, 0xce,

@@ -37,11 +37,11 @@ gazelle:
 
 .PHONY: compile
 compile: gazelle gen-proto
-	bazel query //... | grep "//pkg/${PACKAGE}" | xargs bazel build --define IMAGE_TAG=test
+	bazel build //pkg/${PACKAGE}:${PACKAGE}
 
 .PHONY: run
 run: gazelle gen-proto
-	bazel query //... | grep "//pkg/${PACKAGE}" | xargs bazel run --define IMAGE_TAG=test
+	bazel run //pkg/${PACKAGE}:${PACKAGE}
 
 # proto
 
