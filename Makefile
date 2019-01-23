@@ -25,7 +25,7 @@ dep-update:
 
 .PHONY: dep-wire
 dep-wire:
-	go get github.com/google/go-cloud/wire/cmd/wire
+	go get github.com/google/wire/cmd/wire
 	cd pkg/${PACKAGE} && wire
 
 # build
@@ -54,11 +54,11 @@ gen-proto:
 
 .PHONY: test-go
 test-go: gazelle dep-wire
-	bazel query //... | grep "//pkg/${PACKAGE}" | xargs bazel test --define IMAGE_TAG=latest
+	bazel test //pkg/${PACKAGE}:go_default_test
 
 .PHONY: test-go-all
 test-go-all: gazelle dep-wire
-	bazel query //... | grep "//pkg" | xargs bazel test --define IMAGE_TAG=latest
+	bazel query //... | grep "go_default_test" | xargs bazel test
 
 # container
 
